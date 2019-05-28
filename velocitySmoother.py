@@ -34,10 +34,31 @@ def velSmoother():
         pass
 
     while not rospy.is_shutdown():
-        # Your code goes here
+        smooth()
         pub.publish(currentCommand)
         rospy.sleep(0.1)
 
+def smooth():
+    global targetCommand, currentCommand
+    
+
+    DELTA = 0.05
+
+    # smooth x
+    t = targetCommand.linear.x
+    v = currentCommand.linear.x
+    if v < t:
+        currentCommand.linear.x += min (t-v, DELTA)
+    elif v > t:
+        currentCommand -= DELTA
+
+    # smooth z
+    t = targetCommand.angular.z
+    v = currentCommand.angular.z
+    if v < t:
+        currentCommand.angular.z += min (t-v, DELTA)
+    elif v > t:
+        currentCommand.angular.z -= DELTA
 
 if __name__ == '__main__':
     velSmoother()
