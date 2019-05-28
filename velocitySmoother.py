@@ -42,23 +42,23 @@ def smooth():
     global targetCommand, currentCommand
     
 
-    DELTA = 0.05
-
+    X_DELTA = 0.05
+    Z_DELTA = 0.15
     # smooth x
     t = targetCommand.linear.x
     v = currentCommand.linear.x
     if v < t:
-        currentCommand.linear.x += min (t-v, DELTA)
+        currentCommand.linear.x += min (t-v, X_DELTA)
     elif v > t:
-        currentCommand -= DELTA
+        currentCommand.linear.x -= X_DELTA
 
     # smooth z
     t = targetCommand.angular.z
     v = currentCommand.angular.z
     if v < t:
-        currentCommand.angular.z += min (t-v, DELTA)
+        currentCommand.angular.z += min (t-v, Z_DELTA)
     elif v > t:
-        currentCommand.angular.z -= DELTA
+        currentCommand.angular.z -= Z_DELTA
 
 if __name__ == '__main__':
     velSmoother()
