@@ -3,19 +3,28 @@
 import rospy
 import math
 from geometry_msgs.msg import Twist
+from std_msgs.msg import Empty
 
 
 pub = rospy.Publisher("/mobile_base/commands/velocity", Twist, queue_size=10)
-currentCommand = Twist()
-currentCommand.linear.x = 0.0
-currentCommand.angular.z = 0.0
-targetCommand = Twist()
-targetCommand.linear.x = 0.0
-targetCommand.angular.z = 0.0
+
+zero = Twist()
+zero.angular.z = 0.0
+zero.linear.x = 0.0
+
+currentCommand = zero
+targetCommand = zero
+
+stop = False
 
 def updateCommand(data):
     global targetCommand
     targetCommand = data
+
+def stopCommand(data):
+    global targetCommand, stop
+    targetCommand = zero
+    stop = True
 
 def cleanUp():
     global currentCommand
@@ -28,6 +37,7 @@ def velSmoother():
     global pub, targetCommand, currentCommand
     rospy.init_node("velocitySmoother", anonymous=True)
     rospy.Subscriber("kobuki_command", Twist, updateCommand)
+    rospy.Subscriber("emergency_stop", Empty, stopCommand)
     rospy.on_shutdown(cleanUp)
 
     while pub.get_num_connections() == 0:
@@ -39,7 +49,12 @@ def velSmoother():
         rospy.sleep(0.1)
 
 def smooth():
-    global targetCommand, currentCommand
+    global targetCommand, currentCommand, stop
+
+    if stop:
+        currentCommand = zero
+        stop = False
+        return
     
 
     DELTA = 0.05
