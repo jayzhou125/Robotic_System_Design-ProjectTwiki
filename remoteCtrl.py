@@ -41,7 +41,7 @@ def remoteController():
     #rospy.spin()
 
 def update_command():
-    global input, command
+    global input, command, pub_stop
 
     # emergency brake
     raw_kill = input.buttons[1]
