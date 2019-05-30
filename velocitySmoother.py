@@ -42,8 +42,10 @@ def smooth():
     global targetCommand, currentCommand
     
 
-    X_DELTA = 0.05
-    Z_DELTA = 0.15
+    X_DELTA = 0.07
+
+    Z_DELTA = 0.4
+
     # smooth x
     t = targetCommand.linear.x
     v = currentCommand.linear.x
