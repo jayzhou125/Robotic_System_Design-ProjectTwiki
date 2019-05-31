@@ -46,13 +46,21 @@ def update_command():
     global input, command, pub_stop
 
     # emergency brake
-    raw_kill = input.buttons[1]
+    raw_kill = input.buttons[1] # B
 
     if raw_kill == 1:
         command.angular.z = 0.0
         command.linear.x = 0.0
+	pub_stop.publish(Empty())
         pub_ctrl.publish(command)
         rospy.signal_shutdown("Emergency Stop!!!")
+
+    # resume from stop
+    
+    resume = input.buttons[3] # Y
+
+    if resume == 1:
+        pub_resume.publish(Empty())
     
     # turning
     Z_LIMIT = 1.0
@@ -83,7 +91,7 @@ def update_command():
     if raw_brake < 0.0: # left trigger depressed more than 50%
         command.linear.x = 0.0
         command.angular.z = 0.0
-        pub_stop(Empty())
+        pub_stop.publish(Empty())
 
 if __name__ == '__main__':
     remoteController()

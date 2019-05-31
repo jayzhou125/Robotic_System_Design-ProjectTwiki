@@ -23,38 +23,38 @@ def updateCallback(data):
     targetCommand = data
 
 def emergencyStopCallback(data):
-    stop()
+    doStop()
 
 def resumeCallback(data):
-    start()
+    doStart()
 
 def bumperCallback(data):
     if data.state == 1:
-        stop()
+        doStop()
 
 def buttonCallback(data):
     global stop
     if data.button == 0 and data.state == 1: #B0 and pressed
-		if stop:
-            start()
+	if stop:
+            doStart()
         else:
-            stop()
+            doStop()
 
 
-def stop():
+def doStop():
     global targetCommand, stop
     targetCommand = zero
     stop = True
     ledUpdate(1)
 
-def start():
+def doStart():
     global targetCommand, stop
     targetCommand = zero
     stop = False
     ledUpdate(3)
 
 def cleanUp():
-    stop()
+    doStop()
     pub_velocity.publish(currentCommand)
     rospy.sleep(1)
     ledUpdate(0)
@@ -66,32 +66,33 @@ def smooth():
         currentCommand = zero
         return
     
-    DELTA = 0.05
+    DELTA_X = 0.1
+    DELTA_Z = 0.4
 
     # smooth x
     t = targetCommand.linear.x
     v = currentCommand.linear.x
     if v < t:
-        currentCommand.linear.x += min (t-v, DELTA)
+        currentCommand.linear.x += min (t-v, DELTA_X)
     elif v > t:
-        currentCommand -= DELTA
+        currentCommand.linear.x -= DELTA_X
 
     # smooth z
     t = targetCommand.angular.z
     v = currentCommand.angular.z
     if v < t:
-        currentCommand.angular.z += min (t-v, DELTA)
+        currentCommand.angular.z += min (t-v, DELTA_Z)
     elif v > t:
-        currentCommand.angular.z -= DELTA
+        currentCommand.angular.z -= DELTA_Z
 
 
 #update led1 to value
-def ledUpdate(int value):
+def ledUpdate(value):
     global pub_led1
-	led = Led()
+    led = Led()
     led.value = value
     pub_led1.publish(value)
-	
+
 
 
 def constantCommand():
@@ -106,6 +107,9 @@ def constantCommand():
 
     while pub_velocity.get_num_connections() == 0:
         pass
+
+    rospy.sleep(0.2)
+    ledUpdate(1)
 
     while not rospy.is_shutdown():
         smooth()
