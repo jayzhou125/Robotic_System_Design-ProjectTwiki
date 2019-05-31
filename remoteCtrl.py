@@ -8,6 +8,8 @@ from std_msgs.msg import Empty
 
 pub_ctrl = rospy.Publisher("/kobuki_command", Twist, queue_size=10)
 pub_stop = rospy.Publisher("/emergency_stop", Empty, queue_size=10)
+pub_resume = rospy.Publisher("/resume", Empty, queue_size=10)
+
 input = None
 command = Twist()
 dirty = False
