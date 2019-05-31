@@ -81,29 +81,27 @@ def smooth():
 #Subscribe('kobuki_command',Twist,queue_size=10)
 #Subscribe('velocitySmoother',Twist,queue_size=10)
 #Subscribe('/mobile_base/events/button',Twist,queue_size=10)
+#Subscriber('/mobile_base/events/bumper', BumperEvent, bumperStop)
 	
-	#while running 
-		#-> set /mobile_base/commands/led1 to green (value 1)
+#while running 
 while not rospy.is_shutdown():
-	ledUpate(1)
+	ledUpate(1) # set /mobile_base/commands/led1 to green (value 1)
 	
 	#if B0 is pressed (the first time) (value 0)
 	if(data.button == 0) #B0
+		ledUpdate(3) #set /mobile_base/commands/led1 to red (value 3)
 		if (data.state == 1) #pressed
 			stopCommand() #constantly publish stop command
-		#----> when running stop and press B0 (i.e., pressing B0 twice)
-			#-----> go back to normal, by constantly publishing the command from kobuki_command
-		#--> set /mobile_base/commands/led1 to red (value 3)
-		
-#if constant_command is terminated, before it terminates itself, 
-	#--> should publish the stop command
-	#--> wait for a second
-	#--> turn LED1 light off (value 0)
-	
-#when bumber state is pressed (value 1) or zero (value 1)
-	#--> stop robot 
-	#-->set /mobile_base/commands/led1 to red (value 3)
+		if (data.button == 0) # when running stopped and press B0 (i.e., pressing B0 twice)
+			# todo: go back to normal, by constantly publishing the command from kobuki_command
 
+	#when bumper state is pressed (value 1) or released (value 0)
+	bumperStop()
+
+	#todo: if constant_command is terminated, before it terminates itself, 
+		stopCommand() # should publish the stop command
+		rospy.sleep(1.)# wait for a second
+		ledUpdate(0) # turn LED1 light off (value 0)
 
 #update led1 to value
 def ledUpdate(int value):
@@ -113,6 +111,12 @@ def ledUpdate(int value):
 	led = Led()
 	x = value
 
+#update bumper to stop when released (value 0) or pressed (value 1)
+def bumperStop(data):
+	if(data.state == 0 or data.state == 1)
+		ledUpdate(3) # set /mobile_base/commands/led1 to red (value 3)
+		stopCommand() # stop robot 
+	
 if __name__ == '__main__':
     velSmoother()
 
