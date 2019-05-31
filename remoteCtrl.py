@@ -3,28 +3,31 @@
 import rospy
 from sensor_msgs.msg import Joy
 from geometry_msgs.msg import Twist
+from std_msgs.msg import Empty
 
-pub = rospy.Publisher("/kobuki_command", Twist, queue_size=10)
+
+pub_ctrl = rospy.Publisher("/kobuki_command", Twist, queue_size=10)
+pub_stop = rospy.Publisher("/emergency_stop", Empty, queue_size=10)
 input = None
 command = Twist()
 dirty = False
 
 def joystickCallback(data):
     global input, dirty
-    print data.buttons[0];
-    print data.axes[0];
+    print data.buttons[0]
+    print data.axes[0]
     input = data
     dirty = True
 
 def cleanUp():
-    global pub, command
+    global pub_ctrl, command
     command.linear.x = 0.0
     command.angular.z = 0.0
-    pub.publish(command)
+    pub_ctrl.publish(command)
     rospy.sleep(1)
 
 def remoteController():
-    global pub, command, input, dirty
+    global pub_ctrl, command, input, dirty
     rospy.init_node("remoteControl", anonymous=True)
     rospy.Subscriber("joy", Joy, joystickCallback)
     rospy.on_shutdown(cleanUp)
@@ -33,12 +36,12 @@ def remoteController():
         if dirty:
             dirty = False
             update_command()
-            pub.publish(command)
+            pub_ctrl.publish(command)
 
     #rospy.spin()
 
 def update_command():
-    global input, command
+    global input, command, pub_stop
 
     # emergency brake
     raw_kill = input.buttons[1]
@@ -46,7 +49,7 @@ def update_command():
     if raw_kill == 1:
         command.angular.z = 0.0
         command.linear.x = 0.0
-        pub.publish(command)
+        pub_ctrl.publish(command)
         rospy.signal_shutdown("Emergency Stop!!!")
     
     # turning
@@ -77,7 +80,8 @@ def update_command():
     
     if raw_brake < 0.0: # left trigger depressed more than 50%
         command.linear.x = 0.0
-        command.angular.z = 0.0    
+        command.angular.z = 0.0
+        pub_stop(Empty())
 
 if __name__ == '__main__':
     remoteController()
