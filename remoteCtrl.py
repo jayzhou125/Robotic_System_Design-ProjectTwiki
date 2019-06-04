@@ -83,7 +83,6 @@ def update_command():
     if raw_brake < 0.0: # left trigger depressed more than 50%
         command.linear.x = 0.0
         command.angular.z = 0.0
-        pub_stop(Empty())
 
 if __name__ == '__main__':
     remoteController()
