@@ -45,7 +45,7 @@ def remoteController():
 
 def moveCallback(data): # from /key_handler on /keys channel command
     global input, dirty, command # do we need pub_stop?
-    X_LIMIT = 0.8
+    X_LIMIT = 0.8 # how do we incorporate the x and z limit?
     Z_LIMIT = 1.0
     
     SHIFT = 0.1
