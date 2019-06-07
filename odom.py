@@ -33,12 +33,14 @@ def odomCallbackX(data):
 # this method should get the desired distance (e.g., one meter) 
 # from the key_node via the /batch channel and calculate when to stop
 def odomCalcCallback() # need to get desiredDistance from /batch command
+	shouldStop = distance - currentPositionX # if zero then we need to start stopping
+	
 	# record current position (i.e., controller will send a message, when max speed is reached)
 	currentPositionX = odomCallbackX() # (not sure how to get this but...) we need X value
 	
 	# take desired distance (ex., 1 meter)	
 	# subtract desired distance - current location (i.e., max speed)
-	if (distance - currentPositionX == 0):
+	if shouldStop is 0:
 		# publish to controller (so that it can stop)
 		pub_constant_command.publish(stop()) # publish within constant command (not sure how to do this)
 	
