@@ -80,9 +80,7 @@ def update_command():
 def moveCallback(data): # from /key_handler on /keys channel command
     global input, dirty
 
-    if data == KILL:
-	# emergency stop
-    elif data == STOP:
+    if data == STOP:
 	# stop the robot
     elif data == UP:
 	# move forward with constant_command.py
