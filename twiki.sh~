@@ -2,7 +2,7 @@
 
 gnome-terminal --tab --title="roscore" -e "bash -c 'roscore'"
 
-sleep 2s
+sleep 1s
 
 gnome-terminal --tab --title="joystick" -e "bash -c './set_joystick.sh'"
 

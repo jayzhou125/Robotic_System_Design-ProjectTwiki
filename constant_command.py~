@@ -69,6 +69,7 @@ def doStart():
     global targetCommand, currentCommand, stop, obstructed
 
     print "resuming"
+    print obstructed
 
     if obstructed:
         print "resume failed, robot is obstructed"

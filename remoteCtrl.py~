@@ -79,7 +79,7 @@ def update_command():
     invert = input.buttons[0] == 1
 
     if no_accel and raw_x == 0.0: # 0.0 is half-depressed trigger, needs to be 1 for unpressed (no acceleration)
-        raw_x = 1.0
+        raw_x = -1.0
     else:
         no_accel = False
 
@@ -94,16 +94,11 @@ def update_command():
 
     # brakes
     raw_brake = input.axes[2] # left trigger
-
-    # if raw_brake < 0.0:
-    #    command.linear.x -= 0.2
-    #    pub_ctrl.publish(command)
-    #    rospy.signal_shutdown("normal brake!!!")
     
     if raw_brake < 0.0: # left trigger depressed more than 50%
-       command.linear.x = 0.0
-       command.angular.z = 0.0
-    #    pub_stop.publish(Empty())
+        command.linear.x = 0.0
+        command.angular.z = 0.0
+        pub_stop.publish(Empty())
 
 if __name__ == '__main__':
     remoteController()
