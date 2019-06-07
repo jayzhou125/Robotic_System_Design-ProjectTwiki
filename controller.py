@@ -23,57 +23,57 @@ command = Twist()
 dirty = False
 	
 def cleanUp():
-    global pub_ctrl, command
-    command.linear.x = 0.0
-    command.angular.z = 0.0
-    pub_ctrl.publish(command)
-    rospy.sleep(1)
-
-def moveCallback(data): # from /key_handler on /keys channel command
-    global input, dirty, command # do we need pub_stop?
-    X_LIMIT = 0.8 # how do we incorporate the x and z limit?
-    Z_LIMIT = 1.0
-    
-    SHIFT = 0.1
-
-    if data == STOP:
-	# stop the robot
+	global pub_ctrl, command
 	command.linear.x = 0.0
 	command.angular.z = 0.0
-	# do we want/need pub_stop?
-    elif data == UP:
-	# move forward with constant_command.py
-	# something like .... constant_command.publish(0)
-	# as button is pressed, accelerate
-	command.linear.x = SHIFT
-    elif data == DOWN:
-	# move backwards
-	command.linear.x = -1 * SHIFT
-    elif data == LEFT: 
-	# move left
-	command.angular.z = SHIFT
-    elif data == RIGHT: 
-	# move right
-	command.angular.z = -1 * SHIFT
-    # do we need else?
+	pub_ctrl.publish(command)
+	rospy.sleep(1)
 
-    input = data
-    dirty = True
-    pub_constant_command.publish(command) # publish command to constant_command node
-	
+def moveCallback(data): # from /key_handler on /keys channel command
+	global input, dirty, command # do we need pub_stop?
+	X_LIMIT = 0.8 # how do we incorporate the x and z limit?
+	Z_LIMIT = 1.0
+    
+	SHIFT = 0.1
+
+	if data == STOP:
+		# stop the robot
+		command.linear.x = 0.0
+		command.angular.z = 0.0
+		# do we want/need pub_stop?
+	elif data == UP:
+		# move forward with constant_command.py
+		# something like .... constant_command.publish(0)
+		# as button is pressed, accelerate
+		command.linear.x = SHIFT
+	elif data == DOWN:
+		# move backwards
+		command.linear.x = -1 * SHIFT
+	elif data == LEFT: 
+		# move left
+		command.angular.z = SHIFT
+	elif data == RIGHT: 
+		# move right
+		command.angular.z = -1 * SHIFT
+	# do we need else?
+  
+	input = data
+	dirty = True
+	pub_constant_command.publish(command) # publish command to constant_command node
+
 def remoteController():
-    global pub_ctrl, command, input, dirty
-    rospy.init_node("controller", anonymous=True)
-    rospy.Subscriber("key_node", Int32, moveCallback) # may need to update to what type of information recieving from key_node.py
-    rospy.on_shutdown(cleanUp)
+	global pub_ctrl, command, input, dirty
+	rospy.init_node("controller", anonymous=True)
+	rospy.Subscriber("key_node", Int32, moveCallback) # may need to update to what type of information recieving from key_node.py
+	rospy.on_shutdown(cleanUp)
 
-    while not rospy.is_shutdown():
-        if dirty:
-            dirty = False
-            update_command()
-            pub_ctrl.publish(command)
+	while not rospy.is_shutdown():
+		if dirty:
+			dirty = False
+			update_command()
+			pub_ctrl.publish(command)
 
     #rospy.spin()
 	
 if __name__ == '__main__':
-    remoteController()
+	remoteController()
