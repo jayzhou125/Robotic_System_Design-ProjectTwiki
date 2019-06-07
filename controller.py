@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# takes the key_node.py and sents commands to constant_command.py
+# takes the input from key_node.py command, determines what to do with it, and sends commands to constant_command.py
 
 import rospy
 import math
