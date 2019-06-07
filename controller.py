@@ -15,7 +15,7 @@ import odom # is this how we connect odom?
 pub_constant_command = rospy.Publisher("constant_command", Int32, queue_size=10) #added
 
 # publishing from controller
-pub_ctrl = rospy.Publisher("/kobuki_command", Twist, queue_size=10)
+pub_ctrl = rospy.Publisher("/kobuki_command", Twist, queue_size=10) # do we need this?
 pub_resume = rospy.Publisher("/resume", Empty, queue_size=10)
 
 input = None
@@ -70,18 +70,15 @@ def update_command():
 
     command.linear.x = trim_x
 
-    # brakes
-    raw_brake = input.axes[2] # left trigger
-    
-    if raw_brake < 0.0: # left trigger depressed more than 50%
-        command.linear.x = 0.0
-        command.angular.z = 0.0
+
 
 def moveCallback(data): # from /key_handler on /keys channel command
     global input, dirty
 
     if data == STOP:
 	# stop the robot
+	command.linear.x = 0.0
+	command.angular.z = 0.0
     elif data == UP:
 	# move forward with constant_command.py
 	# something like .... constant_command.publish(0)
@@ -94,8 +91,11 @@ def moveCallback(data): # from /key_handler on /keys channel command
     elif data == RIGHT: 
 	# move right
 	# do we need else?
+    
+
     input = data
     dirty = True
+    pub_constant_command.publish(command) # publish command to constant_command node
 	
 if __name__ == '__main__':
     remoteController()
