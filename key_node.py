@@ -6,16 +6,17 @@ from std_msgs.msg import Int32, Float32, Empty
 from threading import Thread
 from dir_codes import STOP
 
+pub_keys = rospy.Publisher("/keys", Int32, queue_size=20)
+pub_dx = rospy.Publisher("/dx", Float32, queue_size=10)
+pub_dz = rospy.Publisher("/dz", Float32, queue_size=10)
+pub_kill = rospy.Publisher("/emergency_stop", Empty, queue_size=10)
+
 handler = Thread(target=key_handler.keypress)
 
 def key_node(dx=0, dz=0):
-    global handler
+    global handler, pub_keys, pub_dx, pub_dz, pub_kill
     rospy.init_node("key_node")
     rospy.on_shutdown(cleanUp)
-    pub_keys = rospy.Publisher("/keys", Int32, queue_size=20)
-    pub_dx = rospy.Publisher("/dx", Float32, queue_size=10)
-    pub_dz = rospy.Publisher("/dz", Float32, queue_size=10)
-    pub_kill = rospy.Publisher("/emergency_stop", Empty, queue_size=10)
 
     while pub_dx.get_num_connections() == 0 and pub_dz.get_num_connections == 0:
         rospy.sleep(0.1)
@@ -46,17 +47,14 @@ def key_node(dx=0, dz=0):
 
         rospy.sleep(0.1)
     
-    pub_kill.publish(Empty())
-    ropsy.sleep(0.1)
-    handler.join()
+    cleanUp()
 
 
 def cleanUp():
-    global handler
+    global handler, pub_kill
     key_handler.kill = True
     
     pub_kill.publish(Empty())
-    ropsy.sleep(0.1)
     handler.join()
 
 
