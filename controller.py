@@ -29,34 +29,20 @@ def cleanUp():
     pub_ctrl.publish(command)
     rospy.sleep(1)
 
-def remoteController():
-    global pub_ctrl, command, input, dirty
-    rospy.init_node("controller", anonymous=True)
-    rospy.Subscriber("key_node", Int32, moveCallback) # may need to update to what type of information recieving from key_node.py
-    rospy.on_shutdown(cleanUp)
-
-    while not rospy.is_shutdown():
-        if dirty:
-            dirty = False
-            update_command()
-            pub_ctrl.publish(command)
-
-    #rospy.spin()
-
 def moveCallback(data): # from /key_handler on /keys channel command
     global input, dirty, command # do we need pub_stop?
     X_LIMIT = 0.8
     Z_LIMIT = 1.0
 
     if data == STOP:
-	# stop the robot
-	command.linear.x = 0.0
-	command.angular.z = 0.0
-	# do we want/need pub_stop?
+    # stop the robot
+    command.linear.x = 0.0
+    command.angular.z = 0.0
+    # do we want/need pub_stop?
     elif data == UP:
-	# move forward with constant_command.py
-	# something like .... constant_command.publish(0)
-	# as button is pressed, accelerate
+    # move forward with constant_command.py
+    # something like .... constant_command.publish(0)
+    # as button is pressed, accelerate
 
 
         raw_x = input.axes[5] # right trigger
@@ -72,11 +58,11 @@ def moveCallback(data): # from /key_handler on /keys channel command
     command.linear.x = trim_x
 
     elif data == DOWN:
-	# move backwards
+    # move backwards
     elif data == LEFT: 
-	# move left
+    # move left
     elif data == RIGHT: 
-	# move right
+    # move right
     # do we need else?
     
 
@@ -85,11 +71,27 @@ def moveCallback(data): # from /key_handler on /keys channel command
     #if raw_z < 0:
         #command.angular.z = max(raw_z, -1*Z_LIMIT)
     #elif raw_z > 0:
-	    #command.angular.z = min(raw_z, Z_LIMIT)
-	
+        #command.angular.z = min(raw_z, Z_LIMIT)
+    
     input = data
     dirty = True
     pub_constant_command.publish(command) # publish command to constant_command node
+
+def remoteController():
+    global pub_ctrl, command, input, dirty # 
+    rospy.init_node("controller", anonymous=True)
+    rospy.Subscriber("key_node", Int32, moveCallback) # may need to update to what type of information recieving from key_node.py
+    rospy.on_shutdown(cleanUp)
+
+    while not rospy.is_shutdown():
+        if dirty:
+            dirty = False
+            update_command()
+            pub_ctrl.publish(command)
+
+    #rospy.spin()
+
+
 	
 if __name__ == '__main__':
     remoteController()
