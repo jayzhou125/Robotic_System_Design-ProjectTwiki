@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 import sys, tty, termios
-from dir_codes import UP, DOWN, LEFT, RIGHT
+from dir_codes import UP, DOWN, LEFT, RIGHT, STOP
 
 ARROW_CODES = {
     "A": UP,
@@ -20,7 +20,7 @@ WASD_CODES = {
     "D": RIGHT,
 }
 
-code = None
+code = STOP
 dirty = False
 
 kill = False
@@ -48,7 +48,8 @@ def keypress():
         elif ch == "q" or ord(ch) == 3: # terminate thread
             kill = True
         else:
-            code = None
+            code = STOP
+            dirty = True
         
         termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
         # print code

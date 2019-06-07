@@ -4,6 +4,7 @@ import rospy
 import key_handler
 from std_msgs.msg import Int32, Float32
 from threading import Thread
+from dir_codes import STOP
 
 handler = Thread(target=key_handler.keypress)
 
@@ -15,24 +16,35 @@ def key_node(dx=0, dz=0):
     pub_dx = rospy.Publisher("/dx", Float32, queue_size=10)
     pub_dz = rospy.Publisher("/dz", Float32, queue_size=10)
 
+    while pub_dx.get_num_connections() == 0 and pub_dz.get_num_connections == 0:
+        rospy.sleep(0.1)
+
     pub_dx.publish(dx)
     pub_dz.publish(dz)
 
     handler.start() # start keypress handler in background thread
 
-    while True:
+    TIMEOUT = 5
+    stop_wait = TIMEOUT
+    while not key_handler.kill:
+
         dirty = key_handler.dirty
         code = key_handler.code
-        kill = key_handler.kill
 
-        if dirty and code != None:
+
+        if dirty:   # new key pressed
             pub_keys.publish(code)
             key_handler.dirty = False
-        
-        elif key_handler.kill == True:
-            break
+            stop_wait = 0
 
-        rospy.sleep(0.05)
+        elif code != STOP: # last key was valid, but entered long ago
+            if stop_wait == TIMEOUT:
+                pub_keys.publish(STOP)
+            if stop_wait <= TIMEOUT:
+                stop_wait += 1
+
+        rospy.sleep(0.1)
+    
     
     handler.join()
 
