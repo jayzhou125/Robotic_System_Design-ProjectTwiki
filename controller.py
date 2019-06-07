@@ -47,6 +47,8 @@ def moveCallback(data): # from /key_handler on /keys channel command
     global input, dirty, command # do we need pub_stop?
     X_LIMIT = 0.8
     Z_LIMIT = 1.0
+    
+    SHIFT = 0.1
 
     if data == STOP:
 	# stop the robot
@@ -57,36 +59,18 @@ def moveCallback(data): # from /key_handler on /keys channel command
 	# move forward with constant_command.py
 	# something like .... constant_command.publish(0)
 	# as button is pressed, accelerate
-
-
-        raw_x = input.axes[5] # right trigger
-        invert = input.buttons[0] == 1
-
-        raw_x = ((-1*raw_x) + 1) / 2 # convert depressing right trigger to 0 > 1 instead of 1 > -1
-
-        trim_x = min(raw_x, X_LIMIT)
-
-        if invert:
-            trim_x *= -1
-
-    command.linear.x = trim_x
-
+	command.linear.x = SHIFT
     elif data == DOWN:
 	# move backwards
+	command.linear.x = -1 * SHIFT
     elif data == LEFT: 
 	# move left
+	command.angular.z = SHIFT
     elif data == RIGHT: 
 	# move right
+	command.angular.z = -1 * SHIFT
     # do we need else?
-    
-
-    # turning
-    #raw_z = input.axes[0] # LR stick left
-    #if raw_z < 0:
-        #command.angular.z = max(raw_z, -1*Z_LIMIT)
-    #elif raw_z > 0:
-	    #command.angular.z = min(raw_z, Z_LIMIT)
-	
+  
     input = data
     dirty = True
     pub_constant_command.publish(command) # publish command to constant_command node
