@@ -11,10 +11,10 @@ from geometry_msgs.msg import Twist
 from dir_codes import UP, DOWN, LEFT, RIGHT, STOP #adding directory codes
 import odom # is this how we connect odom?
 
-# publish to constant command
+# publish to constant_command
 pub_constant_command = rospy.Publisher("constant_command", Int32, queue_size=10) #added
 
-# publishing from remoteCtrl
+# publishing from controller
 pub_ctrl = rospy.Publisher("/kobuki_command", Twist, queue_size=10)
 pub_resume = rospy.Publisher("/resume", Empty, queue_size=10)
 
@@ -22,28 +22,6 @@ input = None
 command = Twist()
 dirty = False
 	
-def moveCallback(data): # from /key_handler on /keys channel command
-    global input, dirty
-
-    if data == KILL:
-	# emergency stop
-    elif data == STOP:
-	# stop the robot
-    elif data == UP:
-	# move forward with constant_command.py
-	# something like .... constant_command.publish(0)
-	# should this be constant speed?
-	# how do we want to accelerate?
-    elif data == DOWN:
-	# move backwards
-    elif data == LEFT: 
-	# move left
-    elif data == RIGHT: 
-	# move right
-	# do we need else?
-    input = data
-    dirty = True
-
 def cleanUp():
     global pub_ctrl, command
     command.linear.x = 0.0
@@ -98,6 +76,28 @@ def update_command():
     if raw_brake < 0.0: # left trigger depressed more than 50%
         command.linear.x = 0.0
         command.angular.z = 0.0
+
+def moveCallback(data): # from /key_handler on /keys channel command
+    global input, dirty
+
+    if data == KILL:
+	# emergency stop
+    elif data == STOP:
+	# stop the robot
+    elif data == UP:
+	# move forward with constant_command.py
+	# something like .... constant_command.publish(0)
+	# should this be constant speed?
+	# how do we want to accelerate?
+    elif data == DOWN:
+	# move backwards
+    elif data == LEFT: 
+	# move left
+    elif data == RIGHT: 
+	# move right
+	# do we need else?
+    input = data
+    dirty = True
 	
 if __name__ == '__main__':
     remoteController()
