@@ -7,7 +7,7 @@ from threading import Thread
 
 handler = Thread(target=key_handler.keypress)
 
-def key_node():
+def key_node(dx=0, dz=0):
     global handler
     rospy.init_node("key_node")
     rospy.on_shutdown(cleanUp)
@@ -15,11 +15,8 @@ def key_node():
     pub_dx = rospy.Publisher("/dx", Float32, queue_size=10)
     pub_dz = rospy.Publisher("/dz", Float32, queue_size=10)
 
-    DELTA_X = 0.0
-    DELTA_Z = 0.0
-
-    pub_dx.publish(DELTA_X)
-    pub_dz.publish(DELTA_Z)
+    pub_dx.publish(dx)
+    pub_dz.publish(dz)
 
     handler.start() # start keypress handler in background thread
 
@@ -47,4 +44,14 @@ def cleanUp():
 
 
 if __name__ == "__main__":
-    key_node()
+    from argparse import ArgumentParser
+    parser = ArgumentParser(description="takes WASD or arrow key inputs and converts them to robot directions")
+    
+    parser.add_argument("-x", "--delta-x", type=float, nargs='?', const=0, help="set the linear acceleration constant")
+    parser.add_argument("-z", "--delta-z", type=float, nargs='?', const=0, help="set the angular acceleration constant")
+    args = parser.parse_args()
+    
+    dx = args.delta_x
+    dz = args.delta_z
+
+    key_node(dx, dz)
