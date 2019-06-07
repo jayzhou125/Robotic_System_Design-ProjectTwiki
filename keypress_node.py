@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+# takes the key_node.py and sents commands to constant_command.py
+
 import rospy
 import math
 from nav_msgs.msg import Odometry
@@ -29,8 +31,4 @@ def direction():
 	rospy.spin()
 	
 if __name__ == '__main__':
-	# thing
 	direction()
-	
-
-# String parsing and splitting (deal w/later)
