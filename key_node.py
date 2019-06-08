@@ -6,21 +6,23 @@ from std_msgs.msg import Int32, Float32, Empty
 from threading import Thread
 from dir_codes import STOP
 
-pub_keys = rospy.Publisher("/keys", Int32, queue_size=20)
-pub_dx = rospy.Publisher("/dx", Float32, queue_size=10)
-pub_dz = rospy.Publisher("/dz", Float32, queue_size=10)
-pub_kill = rospy.Publisher("/emergency_stop", Empty, queue_size=10)
+pub_keys = rospy.Publisher("/keys", Int32, queue_size=20) # publish the key pressed
+pub_dx = rospy.Publisher("/dx", Float32, queue_size=10)   # publish the x value
+pub_dz = rospy.Publisher("/dz", Float32, queue_size=10)   # publish the z value
+pub_kill = rospy.Publisher("/emergency_stop", Empty, queue_size=10) # publish to stop
 
-handler = Thread(target=key_handler.keypress)
+handler = Thread(target=key_handler.keypress)   
 
 def key_node(dx=0, dz=0):
     global handler, pub_keys, pub_dx, pub_dz, pub_kill
     rospy.init_node("key_node")
     rospy.on_shutdown(cleanUp)
 
+    # if no subscriber to x and z, pass
     while pub_dx.get_num_connections() == 0 or pub_dz.get_num_connections() == 0:
         pass
 
+    # keep publish the x and z value
     pub_dx.publish(dx)
     pub_dz.publish(dz)
 
@@ -35,7 +37,7 @@ def key_node(dx=0, dz=0):
 
 
         if dirty:   # new key pressed
-            pub_keys.publish(code)
+            pub_keys.publish(code)  # publish the key code
             key_handler.dirty = False
             stop_wait = 0
 
