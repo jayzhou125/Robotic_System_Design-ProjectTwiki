@@ -50,26 +50,23 @@ def batchParse(data): # takes in /batch data ([direction, speed, distance]) and 
 	
 	global direction, speed, distance = -1 # TODO: remove -1 when parsing is added
 
-def listen():
-	# Initialize this node
-	rospy_init("odom_node", anonymous=True) # note: may not need to initialize, b/c it is part of controller
+def get_location():
 	
-	# Subscribe to controller
-	rospy.Subscribe("/batch", Float32MultiArray, batchParse) # will get a float from batch with ([direction, speed, distance]) = data
+	rospy_init("location_node", anonymous=True) # Initialize this node
+	rospy.Subscriber('/odom', Odometry, odomCallback) # Subscribe to odom node and get position
+	rospy.spin() # spin to keep the node running
 	
-	# Subscribe to odom node and get position
-	rospy.Subscriber('/odom', Odometry, odomCallback) 
-
+if __name__ == '__main__':
+	get_location()
+	
+		# Subscribe to controller
+# 	rospy.Subscribe("/batch", Float32MultiArray, batchParse) # will get a float from batch with ([direction, speed, distance]) = data
+	
 	# not sure where we should put this
 	# when the current speed hits the peak acceleration
 	# if we later compare to distance, we can know when
 	# to start stopping
-	when speed == MAX_SPEED
-		odomCalcCallback()
+# 	when speed == MAX_SPEED
+# 		odomCalcCallback()
 	
 	# continue
-	rospy.spin()
-	
-
-if __name__ == '__main__':
-	listen()
