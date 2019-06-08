@@ -61,19 +61,21 @@ def moveCallback(data): # from /key_handler on /keys channel command
 	dirty = True
 	pub_constant_command.publish(command) # publish command to constant_command node
 
-def remoteController():
-	global pub_ctrl, command, input, dirty
-	rospy.init_node("controller", anonymous=True)
-	rospy.Subscriber("key_node", Int32, moveCallback) # may need to update to what type of information recieving from key_node.py
-	rospy.on_shutdown(cleanUp)
+def keyController():
+	rospy.init_node("key_controller", anonymous=True)
+	rospy.Subscriber("key_no")
+# 	global pub_ctrl, command, input, dirty
+# 	rospy.init_node("controller", anonymous=True)
+# 	rospy.Subscriber("key_node", Int32, moveCallback) # may need to update to what type of information recieving from key_node.py
+# 	rospy.on_shutdown(cleanUp)
 
-	while not rospy.is_shutdown():
-		if dirty:
-			dirty = False
-			update_command()
-			pub_ctrl.publish(command)
+# 	while not rospy.is_shutdown():
+# 		if dirty:
+# 			dirty = False
+# 			update_command()
+# 			pub_ctrl.publish(command)
 
-    #rospy.spin()
+#     #rospy.spin()
 	
 if __name__ == '__main__':
-	remoteController()
+	keyController()
