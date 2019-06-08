@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-# This should be imported into controller (right now it's not a separate node)
 import rospy
 import math
 from nav_msgs.msg import Odometry
