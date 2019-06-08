@@ -18,8 +18,8 @@ def key_node(dx=0, dz=0):
     rospy.init_node("key_node")
     rospy.on_shutdown(cleanUp)
 
-    while pub_dx.get_num_connections() == 0 and pub_dz.get_num_connections == 0:
-        rospy.sleep(0.1)
+    while pub_dx.get_num_connections() == 0 or pub_dz.get_num_connections() == 0:
+        pass
 
     pub_dx.publish(dx)
     pub_dz.publish(dz)
