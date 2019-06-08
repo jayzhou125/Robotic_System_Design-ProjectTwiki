@@ -101,14 +101,9 @@ def update_command():
     #    rospy.signal_shutdown("normal brake!!!")
     
     if raw_brake < 0.0: # left trigger depressed more than 50%
-<<<<<<< HEAD
        command.linear.x = 0.0
        command.angular.z = 0.0
     #    pub_stop.publish(Empty())
-=======
-        command.linear.x = 0.0
-        command.angular.z = 0.0
->>>>>>> 3b361e5bbc0e1bc739ccd9f8188addf08e92a5fd
 
 if __name__ == '__main__':
     remoteController()
