@@ -11,8 +11,36 @@ from geometry_msgs.msg import Twist
 from dir_codes import UP, DOWN, LEFT, RIGHT, STOP #adding directory codes
 import odom # is this how we connect odom?
 
+
+pub_ctrl = rospy.Publisher("/kobuki_command", Twist, queue_size=10)	# publisher kobuki_command
+pub_stop = rospy.Publisher("/emergency_stop", Empty, queue_size=10)	# publisher stop
+
+global targetX, targetZ
+
 def keyCallback(data)
-    
+    keyPressed = data
+    if keyPressed == STOP:	# stop the robot
+    	pub_stop.publish(Empty())	
+    elif keyPressed == UP：
+		# move forward with constant_command.py
+		# something like .... constant_command.publish(0)
+		# as button is pressed, accelerate
+		command.linear.x = SHIFT
+    elif keyPressed == DOWN:
+		# move backwards
+		command.linear.x = -1 * SHIFT
+    elif keyPressed == LEFT: 
+		# move left
+		command.angular.z = SHIFT
+    elif keyPressed == RIGHT: 
+		# move right
+		command.angular.z = -1 * SHIFT
+
+def dxCallback(data)
+    targetX = data
+	
+def dzCallback(data)
+    targetZ = data
 
 def keyController():
     rospy.init_node("key_controller", anonymous=True)   # initialize the node	
