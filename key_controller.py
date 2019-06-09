@@ -65,11 +65,11 @@ def update_command():
 
 def dxCallback(data):
     targetX = data
-    print targetX + 'e'
+    print targetX + "e"
 	
 def dzCallback(data):
     targetZ = data
-    print targetZ + 'r'
+    print targetZ + "r"
 
 def keyController():
     global dirty, pub_ctrl
