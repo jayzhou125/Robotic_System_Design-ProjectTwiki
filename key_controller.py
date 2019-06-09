@@ -46,22 +46,35 @@ def update_command():
 
     # forward
     FORWARD_LIMIT = 0.8
-    if keyPressed == UP and targetX > 0:
-	command.linear.x = min(targetX, FORWARD_LIMIT)
+    if keyPressed == UP
+	command.linear.x = 0.8
+	pub_ctrl.publish(command)
+#     if keyPressed == UP and targetX > 0:
+# 	command.linear.x = min(targetX, FORWARD_LIMIT)
 	
     # backward
-    if keyPressed == DOWN and targetX < 0:
-	command.linear.x = max(targetX, -1 * FORWARD_LIMIT)
+    if keyPressed == DOWN
+	command.linear.x = -1 * 0.8
+	pub_ctrl.publish(command)
+#     if keyPressed == DOWN and targetX < 0:
+# 	command.linear.x = max(targetX, -1 * FORWARD_LIMIT)
    
     # turn left
     Z_LIMIT = 1.0
-    if keyPressed == LEFT and targetZ > 0:
-	command.angular.z = max(targetZ, Z_LIMIT)
+    if keyPressed == LEFT
+	command.linear.z = Z_LIMIT
+	pub_ctrl.publish(command)
+#     Z_LIMIT = 1.0
+#     if keyPressed == LEFT and targetZ > 0:
+# 	command.angular.z = max(targetZ, Z_LIMIT)
 	
     # turn right
-    if keyPressed == RIGHT and targetZ < 0:
-	command.angular.z = min(targetZ, -1 * Z_LIMIT)
-    pub_ctrl.publish(command)
+    if keyPressed == RIGHT
+	command.linear.z = -1 * Z_LIMIT
+	pub_ctrl.publish(command)
+#     if keyPressed == RIGHT and targetZ < 0:
+# 	command.angular.z = min(targetZ, -1 * Z_LIMIT)
+    
 
 def dxCallback(data):
     targetX = data
