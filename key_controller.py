@@ -30,7 +30,7 @@ def cleanUp():
     pub_ctrl.publish(command)
     rospy.sleep(1)
 
-def key_callback(data):
+def keyCallback(data):
     global keyPressed, dirty
     keyPressed = data
     print data
@@ -64,10 +64,10 @@ def update_command():
     if keyPressed == RIGHT and targetZ < 0:
 	command.angular.z = min(targetZ, -1 * Z_LIMIT)
 
-def dx_callback(data):
+def dxCallback(data):
     targetX = data
 	
-def dz_callback(data):
+def dzCallback(data):
     targetZ = data
 
 def keyController():
