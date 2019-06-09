@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 import sys, tty, termios
-from dir_codes import UP, DOWN, LEFT, RIGHT, STOP
+from dir_codes import *
 
 ARROW_CODES = {
     "A": UP,

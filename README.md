@@ -4,6 +4,8 @@
 
 ### Running Programs:
 
+Kevin programmed ```./twiki.sh``` to open all terminal files. (Also have ```./debug.sh``` for debugging)
+
 Pro tip : be ready for a ton of open terminal windows. Keep that sh*t organized. Leave all terminals open.
   
 1. ```roscore``` : this is the ROS master, must run to execute any nodes.
