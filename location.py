@@ -7,7 +7,7 @@ from tf.transformations import euler_from_quaternion
 from std_msgs.msg import Float32
 
 
-pub_location = rospy.Publisher("/location", array, queue_size=10)
+pub_location = rospy.Publisher("/location", Float32MultiArray, queue_size=10)
 
 def odomCallback(data):
     global currentLocation
