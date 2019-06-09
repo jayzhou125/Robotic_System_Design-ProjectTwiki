@@ -46,14 +46,14 @@ def update_command():
 
     # forward
     FORWARD_LIMIT = 0.8
-    if keyPressed == UP
+    if keyPressed == UP:
 	command.linear.x = 0.8
 	pub_ctrl.publish(command)
 #     if keyPressed == UP and targetX > 0:
 # 	command.linear.x = min(targetX, FORWARD_LIMIT)
 	
     # backward
-    if keyPressed == DOWN
+    if keyPressed == DOWN:
 	command.linear.x = -1 * 0.8
 	pub_ctrl.publish(command)
 #     if keyPressed == DOWN and targetX < 0:
@@ -61,7 +61,7 @@ def update_command():
    
     # turn left
     Z_LIMIT = 1.0
-    if keyPressed == LEFT
+    if keyPressed == LEFT:
 	command.linear.z = Z_LIMIT
 	pub_ctrl.publish(command)
 #     Z_LIMIT = 1.0
@@ -69,7 +69,7 @@ def update_command():
 # 	command.angular.z = max(targetZ, Z_LIMIT)
 	
     # turn right
-    if keyPressed == RIGHT
+    if keyPressed == RIGHT:
 	command.linear.z = -1 * Z_LIMIT
 	pub_ctrl.publish(command)
 #     if keyPressed == RIGHT and targetZ < 0:
