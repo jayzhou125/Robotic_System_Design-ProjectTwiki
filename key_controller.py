@@ -39,8 +39,6 @@ def keyCallback(data):
 def update_command():
     global pub_ctrl, command, keyPressed, dirty, targetX, targetZ
 	
-    pub_ctrl.publish(command)
-	
     # stop
     if keyPressed == STOP:	# stop the robot
 	command.angular.z = 0.0
@@ -63,6 +61,7 @@ def update_command():
     # turn right
     if keyPressed == RIGHT and targetZ < 0:
 	command.angular.z = min(targetZ, -1 * Z_LIMIT)
+    pub_ctrl.publish(command)
 
 def dxCallback(data):
     targetX = data
