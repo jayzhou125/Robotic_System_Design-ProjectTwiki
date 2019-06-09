@@ -16,7 +16,8 @@ pub_ctrl = rospy.Publisher("/kobuki_command", Twist, queue_size=10)	# publisher 
 pub_stop = rospy.Publisher("/emergency_stop", Empty, queue_size=10)	# publisher stop
 # pub_resume = rospy.Publisher("/resume", Empty, queue_size=10)
 
-targetX, targetZ = 0.0
+targetX = 0.0
+targetZ = 0.0
 keyPressed = None
 command = Twist()
 dirty = False
