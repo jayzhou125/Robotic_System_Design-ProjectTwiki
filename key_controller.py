@@ -71,6 +71,7 @@ def dzCallback(data):
     targetZ = data
 
 def keyController():
+    global dirty, pub_ctrl
     rospy.init_node("key_controller", anonymous=True)   # initialize the node	
     rospy.Subscriber("/keys", Int32, keyCallback)	# subscribe to pub_keys
     rospy.Subscriber("/dx", Float32, dxCallback)	# subscribe to pub_dx
