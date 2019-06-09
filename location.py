@@ -6,7 +6,8 @@ from nav_msgs.msg import Odometry
 from tf.transformations import euler_from_quaternion
 from std_msgs.msg import Float32
 
-pub_location = rospy.Publisher("/location", MultiArray, queue_size=10)
+
+pub_location = rospy.Publisher("/location", array, queue_size=10)
 
 def odomCallback(data):
     global currentLocation
