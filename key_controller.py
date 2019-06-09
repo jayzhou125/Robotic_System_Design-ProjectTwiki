@@ -62,23 +62,6 @@ def update_command()
     # turn right
     if keyPressed == RIGHT && targetZ < 0:
 	command.angular.z = min(targetZ, -1 * Z_LIMIT)
-    
-   
-	
-#     elif keyPressed == UP：
-# 		# move forward with constant_command.py
-# 		# something like .... constant_command.publish(0)
-# 		# as button is pressed, accelerate
-# 	command.linear.x = SHIFT
-#     elif keyPressed == DOWN:
-# 		# move backwards
-# 	command.linear.x = -1 * SHIFT
-#     elif keyPressed == LEFT: 
-# 		# move left
-# 	command.angular.z = SHIFT
-#     elif keyPressed == RIGHT: 
-# 		# move right
-#     	command.angular.z = -1 * SHIFT
 
 def dxCallback(data)
     targetX = data
@@ -105,6 +88,20 @@ def keyController():
 if __name__ == '__main__':
     keyController()
 	
+#     elif keyPressed == UP：
+# 		# move forward with constant_command.py
+# 		# something like .... constant_command.publish(0)
+# 		# as button is pressed, accelerate
+# 	command.linear.x = SHIFT
+#     elif keyPressed == DOWN:
+# 		# move backwards
+# 	command.linear.x = -1 * SHIFT
+#     elif keyPressed == LEFT: 
+# 		# move left
+# 	command.angular.z = SHIFT
+#     elif keyPressed == RIGHT: 
+# 		# move right
+#     	command.angular.z = -1 * SHIFT
 	
 # # publish to constant_command
 # pub_constant_command = rospy.Publisher("constant_command", Int32, queue_size=10) #added
