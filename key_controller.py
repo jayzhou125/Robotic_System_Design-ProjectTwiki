@@ -9,7 +9,7 @@ from std_msgs.msg import Float32, Int32, Empty
 from sensor_msgs.msg import Joy
 from geometry_msgs.msg import Twist
 from dir_codes import UP, DOWN, LEFT, RIGHT, STOP #adding directory codes
-import odom # is this how we connect odom?
+# import odom # is this how we connect odom?
 
 
 pub_ctrl = rospy.Publisher("/kobuki_command", Twist, queue_size=10)	# publisher kobuki_command
