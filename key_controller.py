@@ -38,42 +38,33 @@ def keyCallback(data):
 
 def update_command():
     global pub_ctrl, command, keyPressed, dirty, targetX, targetZ
-
-#     pub_ctrl.publish(command)
 	
     # stop
-    if keyPressed == STOP:	# stop the robot
+    if keyPressed == 0:	# stop the robot
 	command.angular.z = 0.0
         command.linear.x = 0.0
 
     # forward
-    FORWARD_LIMIT = 0.8
-    if keyPressed == UP:
+    if keyPressed == 1:
 	command.linear.x = 0.8
-# 	pub_ctrl.publish(command)
 #     if keyPressed == UP and targetX > 0:
 # 	command.linear.x = min(targetX, FORWARD_LIMIT)
 	
     # backward
-    if keyPressed == DOWN:
-	command.linear.x = -1 * 0.8
-# 	pub_ctrl.publish(command)
+    if keyPressed == 2:
+	command.linear.x = -0.8
 #     if keyPressed == DOWN and targetX < 0:
 # 	command.linear.x = max(targetX, -1 * FORWARD_LIMIT)
    
     # turn left
-    Z_LIMIT = 1.0
-    if keyPressed == LEFT:
-	command.linear.z = Z_LIMIT
-# 	pub_ctrl.publish(command)
-#     Z_LIMIT = 1.0
+    if keyPressed == 3:
+	command.linear.z = 1.0
 #     if keyPressed == LEFT and targetZ > 0:
 # 	command.angular.z = max(targetZ, Z_LIMIT)
 	
     # turn right
-    if keyPressed == RIGHT:
-	command.linear.z = -1 * Z_LIMIT
-# 	pub_ctrl.publish(command)
+    if keyPressed == 4:
+	command.linear.z = -1.0
 #     if keyPressed == RIGHT and targetZ < 0:
 # 	command.angular.z = min(targetZ, -1 * Z_LIMIT)
     
