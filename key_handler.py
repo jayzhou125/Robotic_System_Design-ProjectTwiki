@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+# key_handler fetch input from the keyboard and tell which key is pressed
 import sys, tty, termios
 from dir_codes import *
 
