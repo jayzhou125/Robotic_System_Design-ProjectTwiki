@@ -40,33 +40,33 @@ def update_command():
     global pub_ctrl, command, keyPressed, dirty, targetX, targetZ
     print "We are in update-command method"	
     # stop
-    if keyPressed == STOP:	# stop the robot
+    if keyPressed == 0:	# stop the robot
 	command.angular.z = 0.0
         command.linear.x = 0.0
 	print "We are in stop"
 
     # forward
-    if keyPressed == UP:
+    if keyPressed == 1:
 	command.linear.x = 0.8
 #     if keyPressed == UP and targetX > 0:
 # 	command.linear.x = min(targetX, FORWARD_LIMIT)
 	
     # backward
-    if keyPressed == DOWN:
+    if keyPressed == 2:
 	command.linear.x = -0.8
 	print "We are in up"
 #     if keyPressed == DOWN and targetX < 0:
 # 	command.linear.x = max(targetX, -1 * FORWARD_LIMIT)
    
     # turn left
-    if keyPressed == LEFT:
+    if keyPressed == 3:
 	command.linear.z = 1.0
 	print "We are in left"
 #     if keyPressed == LEFT and targetZ > 0:
 # 	command.angular.z = max(targetZ, Z_LIMIT)
 	
     # turn right
-    if keyPressed == RIGHT:
+    if keyPressed == 4:
 	command.linear.z = -1.0
 	print "We are in right"
 #     if keyPressed == RIGHT and targetZ < 0:
