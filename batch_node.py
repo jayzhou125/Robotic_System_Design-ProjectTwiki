@@ -10,7 +10,7 @@ pub_dx = rospy.Publisher("/dx", Float32, queue_size=10)
 pub_dz = rospy.Publisher("/dz", Float32, queue_size=10)
 pub_kill = rospy.Publisher("/emergency_stop", Empty, queue_size=10)
 
-def batch_node(filename=None, dx=0, dz=0):
+def batch_node(f=None, dx=0, dz=0):
     global pub_command
     rospy.init_node("batch_publisher")
     rospy.on_shutdown(cleanUp)
@@ -22,7 +22,7 @@ def batch_node(filename=None, dx=0, dz=0):
     pub_dx.publish(dx)
     pub_dz.publish(dz)
 
-    if filename == None:
+    if f == None:
         print "LIVE MODE: enter commands or q to quit"
 
         command = None
@@ -31,8 +31,9 @@ def batch_node(filename=None, dx=0, dz=0):
             publish(command)
     
     else:
-        with open(filename, "r") as f:
-            [publish(command) for command in f.readlines()]
+        print str(f)
+        for command in f.readlines():
+            publish(command)
     
     cleanUp()
 
@@ -53,13 +54,13 @@ if __name__ == "__main__":
     
     parser.add_argument("-x", "--delta-x", type=float, nargs='?', const=0, help="set the linear acceleration constant")
     parser.add_argument("-z", "--delta-z", type=float, nargs='?', const=0, help="set the angular acceleration constant")
-    parser.add_argument("-f", "--filename", type=FileType("r"), nargs=1, help="file with batch commands to transmit to the robot")
+    parser.add_argument("-f", "--file", type=FileType("r"), help="file with batch commands to transmit to the robot")
 
     args = parser.parse_args()
 
     dx = args.delta_x
     dz = args.delta_z
-    filename = args.filename
+    f = args.file
     
 
-    batch_node(filename, dx, dz)
+    batch_node(f, dx, dz)
