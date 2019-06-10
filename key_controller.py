@@ -13,7 +13,7 @@ from dir_codes import UP, DOWN, LEFT, RIGHT, STOP #adding directory codes
 
 
 pub_ctrl = rospy.Publisher("/kobuki_command", Twist, queue_size=10)	# publisher kobuki_command
-pub_stop = rospy.Publisher("/emergency_stop", Empty, queue_size=10)	# publisher stop
+# pub_stop = rospy.Publisher("/emergency_stop", Empty, queue_size=10)	# publisher stop
 # pub_resume = rospy.Publisher("/resume", Empty, queue_size=10)
 
 targetX = 0.0
