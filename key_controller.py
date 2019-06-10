@@ -33,13 +33,15 @@ def cleanUp():
 def keyCallback(data):
     global keyPressed, dirty
     keyPressed = data
-    print data
+    print "this is data " ,data
+    print "this is keypressed ",keyPressed
     dirty = True
 
 def update_command():
     global pub_ctrl, command, keyPressed, dirty, targetX, targetZ
     print "We are in update-command method"	
     # stop
+    print "this is keypress inside the method " ,data
     if keyPressed == 0:	# stop the robot
 	command.angular.z = 0.0
         command.linear.x = 0.0
