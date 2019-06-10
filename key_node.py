@@ -1,14 +1,15 @@
 #!/usr/bin/python
 
+# key handler identify which key is pressed and publish the delta z, x and key code(up, down, left, right)
 import rospy
-import key_handler
+import key_handler      # import key handler to help to identify the keys pressed
 from std_msgs.msg import Int32, Float32, Empty
 from threading import Thread
 from dir_codes import STOP
 
 pub_keys = rospy.Publisher("/keys", Int32, queue_size=20) # publish the key pressed
-pub_dx = rospy.Publisher("/dx", Float32, queue_size=10)   # publish the x value
-pub_dz = rospy.Publisher("/dz", Float32, queue_size=10)   # publish the z value
+pub_dx = rospy.Publisher("/dx", Float32, queue_size=10)   # publish the delta value for x, will be used by smoother
+pub_dz = rospy.Publisher("/dz", Float32, queue_size=10)   # publish the delta value for z, will be used by smoother
 pub_kill = rospy.Publisher("/emergency_stop", Empty, queue_size=10) # publish to stop
 
 handler = Thread(target=key_handler.keypress)   
@@ -22,7 +23,7 @@ def key_node(dx=0, dz=0):
     while pub_dx.get_num_connections() == 0 or pub_dz.get_num_connections() == 0:
         pass
 
-    # keep publish the x and z value
+    # publish the x and z value
     pub_dx.publish(dx)
     pub_dz.publish(dz)
 
@@ -64,7 +65,7 @@ if __name__ == "__main__":
     from argparse import ArgumentParser
     parser = ArgumentParser(description="takes WASD or arrow key inputs and converts them to robot directions")
     
-    parser.add_argument("-x", "--delta-x", type=float, nargs='?', const=0, help="set the linear acceleration constant")
+    parser.add_argument("-x", "--delta-x", type=float, nargs='?', const=0, help="set the linear acceleration constant") # parse 
     parser.add_argument("-z", "--delta-z", type=float, nargs='?', const=0, help="set the angular acceleration constant")
     args = parser.parse_args()
     
