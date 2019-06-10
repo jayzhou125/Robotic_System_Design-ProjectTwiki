@@ -33,7 +33,7 @@ def cleanUp():
 def keyCallback(data):
     global keyPressed, dirty
     keyPressed = data
-    print "this is data " ,data
+    print "this is data " ,(type(data))
     print "this is keypressed ",keyPressed
     dirty = True
 
