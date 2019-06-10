@@ -13,7 +13,7 @@ from dir_codes import UP, DOWN, LEFT, RIGHT, STOP #adding directory codes
 
 
 pub_ctrl = rospy.Publisher("/kobuki_command", Twist, queue_size=10)	# publisher kobuki_command
-# pub_stop = rospy.Publisher("/emergency_stop", Empty, queue_size=10)	# publisher stop
+pub_stop = rospy.Publisher("/emergency_stop", Empty, queue_size=10)	# publisher stop
 # pub_resume = rospy.Publisher("/resume", Empty, queue_size=10)
 
 targetX = 0.0
@@ -40,30 +40,30 @@ def update_command():
     global pub_ctrl, command, keyPressed, dirty, targetX, targetZ
 	
     # stop
-    if keyPressed == 0:	# stop the robot
+    if keyPressed == STOP:	# stop the robot
 	command.angular.z = 0.0
         command.linear.x = 0.0
 
     # forward
-    if keyPressed == 1:
+    if keyPressed == UP:
 	command.linear.x = 0.8
 #     if keyPressed == UP and targetX > 0:
 # 	command.linear.x = min(targetX, FORWARD_LIMIT)
 	
     # backward
-    if keyPressed == 2:
+    if keyPressed == DOWN:
 	command.linear.x = -0.8
 #     if keyPressed == DOWN and targetX < 0:
 # 	command.linear.x = max(targetX, -1 * FORWARD_LIMIT)
    
     # turn left
-    if keyPressed == 3:
+    if keyPressed == LEFT:
 	command.linear.z = 1.0
 #     if keyPressed == LEFT and targetZ > 0:
 # 	command.angular.z = max(targetZ, Z_LIMIT)
 	
     # turn right
-    if keyPressed == 4:
+    if keyPressed == RIGHT:
 	command.linear.z = -1.0
 #     if keyPressed == RIGHT and targetZ < 0:
 # 	command.angular.z = min(targetZ, -1 * Z_LIMIT)

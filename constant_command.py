@@ -134,8 +134,8 @@ def constantCommand():
     rospy.Subscriber("/mobile_base/events/button", ButtonEvent, buttonCallback)
     rospy.on_shutdown(cleanUp)
 
-    while pub_velocity.get_num_connections() == 0:
-        pass
+#     while pub_velocity.get_num_connections() == 0:
+#         pass
 
     rospy.sleep(0.2)
     ledUpdate(1)

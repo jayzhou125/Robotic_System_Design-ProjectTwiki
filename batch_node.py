@@ -5,10 +5,10 @@ import rospy
 from std_msgs.msg import String, Float32, Empty
 from command_parser import *
 
-pub_command = rospy.Publisher("/batch_command", String, queue_size=25)
-pub_dx = rospy.Publisher("/dx", Float32, queue_size=10)
-pub_dz = rospy.Publisher("/dz", Float32, queue_size=10)
-pub_kill = rospy.Publisher("/emergency_stop", Empty, queue_size=10)
+pub_command = rospy.Publisher("/batch_command", String, queue_size=25)      # publish the command 
+pub_dx = rospy.Publisher("/dx", Float32, queue_size=10)                     # publish delta x
+pub_dz = rospy.Publisher("/dz", Float32, queue_size=10)                     # publish delta z
+pub_kill = rospy.Publisher("/emergency_stop", Empty, queue_size=10)         # publish an emergency stop
 
 def batch_node(f=None, dx=0, dz=0):
     global pub_command
