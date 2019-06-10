@@ -78,20 +78,20 @@ def update_command():
 # 	command.angular.z = min(targetZ, -1 * Z_LIMIT)
     
 
-# def dxCallback(data):
-#     targetX = data
+def dxCallback(data):
+    targetX = data
 #     print targetX
 	
-# def dzCallback(data):
-#     targetZ = data
+def dzCallback(data):
+    targetZ = data
 #     print targetZ 
 
 def keyController():
     global dirty, pub_ctrl
     rospy.init_node("key_controller", anonymous=True)   # initialize the node	
     rospy.Subscriber("/keys", Int32, keyCallback)	# subscribe to pub_keys
-#     rospy.Subscriber("/dx", Float32, dxCallback)	# subscribe to pub_dx
-#     rospy.Subscriber("/dz", Float32, dzCallback)	# subscribe to pub_dz
+    rospy.Subscriber("/dx", Float32, dxCallback)	# subscribe to pub_dx
+    rospy.Subscriber("/dz", Float32, dzCallback)	# subscribe to pub_dz
 	
     rospy.on_shutdown(cleanUp)
 
