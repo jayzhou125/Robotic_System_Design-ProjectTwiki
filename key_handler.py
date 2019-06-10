@@ -53,7 +53,7 @@ def keypress():
             dirty = True
         
         termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
-        print code
+        print (type(code))
 
 
 
