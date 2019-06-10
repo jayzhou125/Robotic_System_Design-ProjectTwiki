@@ -33,7 +33,7 @@ def cleanUp():
 def keyCallback(data):
     global keyPressed, dirty
     keyPressed = data
-#     print data
+    print data
     dirty = True
 
 def update_command():
