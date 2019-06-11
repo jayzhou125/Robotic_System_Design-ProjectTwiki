@@ -32,9 +32,9 @@ def cleanUp():
 
 def keyCallback(data):
     global keyPressed, dirty
-    keyPressed = data
-    print "this is data " ,(type(data))
-    print "this is keypressed ",keyPressed
+    keyPressed = data.data
+#     print "this is data " ,(type(data))
+#     print "this is keypressed ",keyPressed
     dirty = True
 
 def update_command():
