@@ -88,7 +88,7 @@ def keyController():
             dirty = False
             update_command()
             pub_ctrl.publish(command)
-	rospy.sleep(0.05)
+	rospy.sleep(0.03)
     rospy.spin()
 	
 if __name__ == '__main__':
