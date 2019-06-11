@@ -23,6 +23,7 @@ targetCommand = zero()
 stop = False
 bumpers = [False, False, False]
 obstructed = False
+raw = False
 
 def updateCallback(data):
     global targetCommand
@@ -87,13 +88,18 @@ def cleanUp():
     ledUpdate(0)
 
 def smooth():
-    global targetCommand, currentCommand, stop
+    global targetCommand, currentCommand, stop, raw
 
     if stop:
 	targetCommand = zero()
         currentCommand = zero()
 	pub_velocity.publish(zero())
         return
+    
+    if raw:
+        currentCommand = targetCommand
+        return
+
     
     DELTA_X = 0.03 # was 0.04
     DELTA_Z = 0.35 # was 0.4
@@ -151,5 +157,9 @@ def constantCommand():
         rospy.sleep(0.1) 
 
 if __name__ == '__main__':
+    from argparse import ArgumentParser
+    parser = ArgumentParser(description="node for controlling robot speed and emergency stops")
+
+    parser.add_argument("-r", "--raw", dest="raw", action="store_const", const=True, default=False, help="use this option to disable constant_command's internal smoothing functionality")
     constantCommand()
 
