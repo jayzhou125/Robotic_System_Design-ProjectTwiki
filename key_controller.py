@@ -48,11 +48,11 @@ def update_command():
 
     # forward
     if keyPressed == UP:
-	command.linear.x = 0.8
+	command.linear.x = 0.6
 	
     # backward
     if keyPressed == DOWN:
-	command.linear.x = -0.8
+	command.linear.x = -0.6
 	print "We are in up"
    
     # turn left
