@@ -57,12 +57,12 @@ def update_command():
    
     # turn left
     if keyPressed == LEFT:
-	command.angular.z = 1.0
+	command.angular.z = 0.6
 	print "We are in left"
 	
     # turn right
     if keyPressed == RIGHT:
-	command.angular.z = -1.0
+	command.angular.z = -0.6
 	print "We are in right"
     
 
