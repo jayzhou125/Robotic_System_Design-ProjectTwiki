@@ -16,12 +16,13 @@ pub_ctrl = rospy.Publisher("/kobuki_command", Twist, queue_size=10)	# publisher 
 pub_stop = rospy.Publisher("/emergency_stop", Empty, queue_size=10)	# publisher stop
 # pub_resume = rospy.Publisher("/resume", Empty, queue_size=10)
 
+# we probably need brake and reset (the lt and Y to control the robot better)!!!!!!!!!!!!!!!!!!!!!!!
+
 targetX = 0.0
 targetZ = 0.0
 keyPressed = None
 command = Twist()
 dirty = False
-# no_accel = True
 
 def cleanUp():
     global pub_ctrl, command
@@ -33,8 +34,6 @@ def cleanUp():
 def keyCallback(data):
     global keyPressed, dirty
     keyPressed = data.data
-#     print "this is data " ,(type(data))
-#     print "this is keypressed ",keyPressed
     dirty = True
 
 def update_command():
@@ -50,29 +49,21 @@ def update_command():
     # forward
     if keyPressed == UP:
 	command.linear.x = 0.8
-#     if keyPressed == UP and targetX > 0:
-# 	command.linear.x = min(targetX, FORWARD_LIMIT)
 	
     # backward
     if keyPressed == DOWN:
 	command.linear.x = -0.8
 	print "We are in up"
-#     if keyPressed == DOWN and targetX < 0:
-# 	command.linear.x = max(targetX, -1 * FORWARD_LIMIT)
    
     # turn left
     if keyPressed == LEFT:
 	command.angular.z = 1.0
 	print "We are in left"
-#     if keyPressed == LEFT and targetZ > 0:
-# 	command.angular.z = max(targetZ, Z_LIMIT)
 	
     # turn right
     if keyPressed == RIGHT:
 	command.angular.z = -1.0
 	print "We are in right"
-#     if keyPressed == RIGHT and targetZ < 0:
-# 	command.angular.z = min(targetZ, -1 * Z_LIMIT)
     
 
 def dxCallback(data):
