@@ -95,7 +95,7 @@ def smooth():
 	pub_velocity.publish(zero())
         return
     
-    DELTA_X = 0.03 # was 0.3
+    DELTA_X = 0.02 # was 0.03
     DELTA_Z = 0.35 # was 0.35
 
     # smooth x
@@ -137,7 +137,7 @@ def constantCommand():
     while pub_velocity.get_num_connections() == 0:
         pass
 
-    rospy.sleep(0.2) # was 0.2
+    rospy.sleep(0.2)
     ledUpdate(1)
 
     while not rospy.is_shutdown():
@@ -148,7 +148,7 @@ def constantCommand():
             targetCommand = zero()
             currentCommand = zero()
             pub_velocity.publish(zero())
-        rospy.sleep(0.1) # was 0.1
+        rospy.sleep(0.1) 
 
 if __name__ == '__main__':
     constantCommand()
