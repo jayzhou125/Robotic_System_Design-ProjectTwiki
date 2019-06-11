@@ -27,7 +27,7 @@ def key_node(dx=0, dz=0):
     handler.start() # start keypress handler in background thread
 
     SLEEP = 0.05
-    TIMEOUT = 2 / SLEEP
+    TIMEOUT = 1
     stop_wait = TIMEOUT
     while not key_handler.kill:
 
