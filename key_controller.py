@@ -68,11 +68,9 @@ def update_command():
 
 def dxCallback(data):
     targetX = data
-#     print targetX
 	
 def dzCallback(data):
     targetZ = data
-#     print targetZ 
 
 def keyController():
     global dirty, pub_ctrl
