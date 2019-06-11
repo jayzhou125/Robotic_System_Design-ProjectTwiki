@@ -95,8 +95,8 @@ def smooth():
 	pub_velocity.publish(zero())
         return
     
-    DELTA_X = 0.04 # was 0.3
-    DELTA_Z = 0.4 # was 0.35
+    DELTA_X = 0.03 # was 0.3
+    DELTA_Z = 0.35 # was 0.35
 
     # smooth x
     t = targetCommand.linear.x
