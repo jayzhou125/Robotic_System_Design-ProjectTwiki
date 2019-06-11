@@ -48,13 +48,13 @@ def update_command():
 	print "We are in stop"
 
     # forward
-    if keyPressed == "data: 1":
+    if keyPressed == 1:
 	command.linear.x = 0.8
 #     if keyPressed == UP and targetX > 0:
 # 	command.linear.x = min(targetX, FORWARD_LIMIT)
 	
     # backward
-    if keyPressed == 2:
+    if keyPressed == DOWN:
 	command.linear.x = -0.8
 	print "We are in up"
 #     if keyPressed == DOWN and targetX < 0:
