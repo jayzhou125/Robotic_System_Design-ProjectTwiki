@@ -8,11 +8,24 @@ def parse_command(command):
     command = command.lower()
     linear = 0
     angular = 0
+    speed = 0
     tokens = command.split()
 
     # some things to ignore
     if len(tokens) < 2:
         return linear, angular
+
+    # custom speed specified
+    if (len(tokens) == 5 or len(tokens) == 7) and tokens[-2] == "s":
+        try:
+            speed = tokens[-1]
+        except ValueError:
+            print "\tError: {0} is not a valid floating point number"
+        
+        if speed > 1:
+            speed = 1
+        if speed < 0:
+            speed = 0
     
     # simple move or turn command
     if len(tokens) == 2:
@@ -69,4 +82,4 @@ def parse_command(command):
     else:
         print "\tERROR: invalid command, see BATCH_FORMAT.md for command structure"
     
-    return linear, angular
+    return linear, angular, speed

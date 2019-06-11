@@ -5,12 +5,13 @@ import rospy
 import key_handler      # import key handler to help to identify the keys pressed
 from std_msgs.msg import Int32, Float32, Empty
 from threading import Thread
-from dir_codes import STOP
+from dir_codes import STOP, RESUME
 
 pub_keys = rospy.Publisher("/keys", Int32, queue_size=20) # publish the key pressed
 pub_dx = rospy.Publisher("/dx", Float32, queue_size=10)   # publish the delta value for x, will be used by smoother
 pub_dz = rospy.Publisher("/dz", Float32, queue_size=10)   # publish the delta value for z, will be used by smoother
 pub_kill = rospy.Publisher("/emergency_stop", Empty, queue_size=10) # publish to stop
+pub_resume = rospy.Publisher("/resume", Empty, queue_size=10) # publish to resume
 
 handler = Thread(target=key_handler.keypress)   
 
@@ -19,17 +20,14 @@ def key_node(dx=0, dz=0):
     rospy.init_node("key_node")
     rospy.on_shutdown(cleanUp)
 
-    # if no subscriber to x and z, pass
-    while pub_dx.get_num_connections() == 0 or pub_dz.get_num_connections() == 0:
-        pass
-
     # publish the x and z value
     pub_dx.publish(dx)
     pub_dz.publish(dz)
 
     handler.start() # start keypress handler in background thread
 
-    TIMEOUT = 5
+    SLEEP = 0.05
+    TIMEOUT = 2 / SLEEP
     stop_wait = TIMEOUT
     while not key_handler.kill:
 
@@ -38,9 +36,12 @@ def key_node(dx=0, dz=0):
 
 
         if dirty:   # new key pressed
-            pub_keys.publish(code)  # publish the key code
-            key_handler.dirty = False
-            stop_wait = 0
+            if code == RESUME:
+                pub_resume.publish(Empty())
+            else:
+                pub_keys.publish(code)  # publish the key code
+                key_handler.dirty = False
+                stop_wait = 0
 
         elif code != STOP: # last key was valid, but entered long ago
             if stop_wait == TIMEOUT:
@@ -48,7 +49,7 @@ def key_node(dx=0, dz=0):
             if stop_wait <= TIMEOUT:
                 stop_wait += 1
 
-        rospy.sleep(0.07)
+        rospy.sleep(SLEEP)
     
     cleanUp()
 
