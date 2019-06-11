@@ -48,7 +48,7 @@ def update_command():
 	print "We are in stop"
 
     # forward
-    if keyPressed == 1:
+    if keyPressed == UP:
 	command.linear.x = 0.8
 #     if keyPressed == UP and targetX > 0:
 # 	command.linear.x = min(targetX, FORWARD_LIMIT)
@@ -61,15 +61,15 @@ def update_command():
 # 	command.linear.x = max(targetX, -1 * FORWARD_LIMIT)
    
     # turn left
-    if keyPressed == 3:
-	command.linear.z = 1.0
+    if keyPressed == LEFT:
+	command.angular.z = 1.0
 	print "We are in left"
 #     if keyPressed == LEFT and targetZ > 0:
 # 	command.angular.z = max(targetZ, Z_LIMIT)
 	
     # turn right
-    if keyPressed == 4:
-	command.linear.z = -1.0
+    if keyPressed == RIGHT:
+	command.angular.z = -1.0
 	print "We are in right"
 #     if keyPressed == RIGHT and targetZ < 0:
 # 	command.angular.z = min(targetZ, -1 * Z_LIMIT)
