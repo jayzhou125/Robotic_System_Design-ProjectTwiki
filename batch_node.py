@@ -16,7 +16,8 @@ def batch_node(f=None, dx=0, dz=0):
     rospy.on_shutdown(cleanUp)
 
     # wait for all channels to connect
-    while pub_command.get_num_connections() == 0 or pub_dx.get_num_connections() == 0 or pub_dz.get_num_connections() == 0:
+    print "Connecting..."
+    while pub_command.get_num_connections():
         pass
 
     pub_dx.publish(dx)
@@ -38,8 +39,8 @@ def batch_node(f=None, dx=0, dz=0):
     cleanUp()
 
 def publish(command):
-        linear, angular = parse_command(command)
-        command_string = "{0} {1}".format(linear, angular)
+        linear, angular, speed = parse_command(command)
+        command_string = "{0} {1} {2}".format(linear, angular, speed)
         pub_command.publish(command_string)
 
 def cleanUp():

@@ -15,10 +15,12 @@ WASD_CODES = {
     "s": DOWN,
     "a": LEFT,
     "d": RIGHT,
+    "y": RESUME,
     "W": UP,
     "S": DOWN,
     "A": LEFT,
     "D": RIGHT,
+    "Y": RESUME,
 }
 
 code = STOP
