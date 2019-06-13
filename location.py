@@ -28,15 +28,11 @@ def odomCallback(data):
     y = data.pose.pose.position.y
 	
     currentLocation = [ x, y, degree ] # record the current location
-    msg = "(%.6f,%.6f) at %.6f degree." % (x, y, degree) # format current location
+    # msg = "(%.6f,%.6f) at %.6f degree." % (x, y, degree) # format current location
     # rospy.loginfo(msg) 	# print the location
 
 def init():
     rospy.Subscriber('/odom', Odometry, odomCallback) # Subscribe to odom node and get position
-    rospy.spin() # spin to keep the node running
-	
-    while not rospy.is_shutdown():
-	pub_location.publish(currentLocation)# keep publishing the location info
 	
 if __name__ == '__main__':
     rospy.init_node("location_node", anonymous=True) # Initialize this node
