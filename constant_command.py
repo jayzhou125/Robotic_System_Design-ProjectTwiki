@@ -161,5 +161,6 @@ if __name__ == '__main__':
     parser = ArgumentParser(description="node for controlling robot speed and emergency stops")
 
     parser.add_argument("-r", "--raw", dest="raw", action="store_const", const=True, default=False, help="use this option to disable constant_command's internal smoothing functionality")
+    args = parser.parse_args()
     constantCommand()
 

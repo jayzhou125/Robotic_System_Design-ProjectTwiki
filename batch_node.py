@@ -17,7 +17,7 @@ def batch_node(f=None, dx=0, dz=0):
 
     # wait for all channels to connect
     print "Connecting..."
-    while pub_command.get_num_connections():
+    while pub_command.get_num_connections() == 0:
         pass
 
     pub_dx.publish(dx)

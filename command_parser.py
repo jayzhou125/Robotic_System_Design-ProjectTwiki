@@ -16,7 +16,7 @@ def parse_command(command):
         return linear, angular
 
     # custom speed specified
-    if (len(tokens) == 5 or len(tokens) == 7) and tokens[-2] == "s":
+    if tokens[-2] == "s":
         try:
             speed = tokens[-1]
         except ValueError:
@@ -26,6 +26,9 @@ def parse_command(command):
             speed = 1
         if speed < 0:
             speed = 0
+        
+        tokens = tokens[:-2]
+        print tokens
     
     # simple move or turn command
     if len(tokens) == 2:
