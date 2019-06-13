@@ -26,7 +26,7 @@ def key_node(dx=0, dz=0):
 
     handler.start() # start keypress handler in background thread
 
-    SLEEP = 0.07
+    SLEEP = 0.05
     TIMEOUT = 1/(4 * SLEEP)
     stop_wait = TIMEOUT
     while not key_handler.kill:
@@ -49,7 +49,7 @@ def key_node(dx=0, dz=0):
             if stop_wait <= TIMEOUT:
                 stop_wait += 1
 
-        rospy.sleep(SLEEP)
+        rospy.sleep(0.07)
     
     cleanUp()
 
