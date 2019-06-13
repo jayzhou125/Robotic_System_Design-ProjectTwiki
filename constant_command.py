@@ -101,7 +101,7 @@ def smooth():
         return
 
     
-    DELTA_X = 0.02 # was 0.04
+    DELTA_X = 0.03 # was 0.04
     DELTA_Z = 0.3 # was 0.4
 
     # smooth x
