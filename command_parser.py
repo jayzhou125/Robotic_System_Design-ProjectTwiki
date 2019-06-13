@@ -67,8 +67,10 @@ def parse_command(command):
                         radius = float(tokens[4])
                     except ValueError:
                         print "\tERROR: {0} is not a valid floating point number".format(tokens[4])
+
+                    angular = radius
                     
-                    angular = (linear / radius) * 180/pi
+                    # angular = (linear / radius) * 180/pi
                     # linear is arc length, divide by radius to get angle in radians
                     # multiply by 180/pi to convert to degrees
 

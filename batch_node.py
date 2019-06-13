@@ -4,8 +4,8 @@ import sys
 import rospy
 from std_msgs.msg import String, Float32, Empty
 from command_parser import *
+from batch_controller import execute
 
-pub_command = rospy.Publisher("/batch_command", String, queue_size=25)      # publish the command 
 pub_dx = rospy.Publisher("/dx", Float32, queue_size=10)                     # publish delta x
 pub_dz = rospy.Publisher("/dz", Float32, queue_size=10)                     # publish delta z
 pub_kill = rospy.Publisher("/emergency_stop", Empty, queue_size=10)         # publish an emergency stop
@@ -29,19 +29,19 @@ def batch_node(f=None, dx=0, dz=0):
         command = None
         while command != "q":
             command = sys.stdin.readline().strip()
-            publish(command)
+            execute(command)
     
     else:
         print str(f)
         for command in f.readlines():
-            publish(command)
+            execute(command)
     
     cleanUp()
 
-def publish(command):
-        linear, angular, speed = parse_command(command)
-        command_string = "{0} {1} {2}".format(linear, angular, speed)
-        pub_command.publish(command_string)
+# def publish(command):
+#         linear, angular, speed = parse_command(command)
+#         command_string = "{0} {1} {2}".format(linear, angular, speed)
+#         pub_command.publish(command_string)
 
 def cleanUp():
     pub_kill.publish(Empty())

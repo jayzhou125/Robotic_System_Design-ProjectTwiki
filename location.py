@@ -4,10 +4,15 @@ import rospy
 import math
 from nav_msgs.msg import Odometry
 from tf.transformations import euler_from_quaternion
-from std_msgs.msg import Float32
+from std_msgs.msg import Float32, Empty
 
+currentLocation = []
 
-pub_location = rospy.Publisher("/location", Float32MultiArray, queue_size=10)
+pub_reset = rospy.Publisher("/mobile_base/commands/reset_odometry", Empty, queue_size=10)
+
+def resetOdom():
+    pub_reset.publish(Empty())
+
 
 def odomCallback(data):
     global currentLocation
