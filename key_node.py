@@ -49,7 +49,7 @@ def key_node(dx=0, dz=0):
             if stop_wait <= TIMEOUT:
                 stop_wait += 1
 
-        rospy.sleep(0.06)
+        rospy.sleep(0.07)
     
     cleanUp()
 
