@@ -101,8 +101,8 @@ def smooth():
         return
 
     
-    DELTA_X = 0.08 # was 0.04; 0.02 = high precision
-    DELTA_Z = 0.7 # was 0.4; 0.3 = high precision
+    DELTA_X = 0.02 # was 0.04; 0.02 = high precision
+    DELTA_Z = 0.3 # was 0.4; 0.3 = high precision
 
     # smooth x
     t = targetCommand.linear.x
