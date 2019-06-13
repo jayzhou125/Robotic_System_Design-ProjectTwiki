@@ -29,10 +29,9 @@ def odomCallback(data):
 	
     currentLocation = [ x, y, degree ] # record the current location
     msg = "(%.6f,%.6f) at %.6f degree." % (x, y, degree) # format current location
-    rospy.loginfo(msg) 	# print the location
+    # rospy.loginfo(msg) 	# print the location
 
-def get_location():
-    rospy_init("location_node", anonymous=True) # Initialize this node
+def init():
     rospy.Subscriber('/odom', Odometry, odomCallback) # Subscribe to odom node and get position
     rospy.spin() # spin to keep the node running
 	
@@ -40,7 +39,8 @@ def get_location():
 	pub_location.publish(currentLocation)# keep publishing the location info
 	
 if __name__ == '__main__':
-    get_location()
+    rospy.init_node("location_node", anonymous=True) # Initialize this node
+    init()
 
 # global MAX_SPEED = 0.8 # this is used to mark when acceleration hits peak (so we can know hwen to slow down)
 

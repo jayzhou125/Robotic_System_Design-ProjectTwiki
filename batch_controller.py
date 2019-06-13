@@ -1,18 +1,21 @@
 import rospy
 from geometry_msgs.msg import Twist
+from std_msgs.msg import Empty
 from location import currentLocation, resetOdom
 
 SLEEP = 0.05
 DELTA_X = 0.05*SLEEP
 DELTA_Z = 0.4*SLEEP
-command
+command = None
 cancel = False
+
+
+def stop():
+    cancel = True
 
 pub_command = rospy.Publisher("/constant_command", Twist, queue_size=25)   # publish the command 
 emergency_stop = rospy.Subscriber("/emergency_stop", Empty, stop)
 
-def stop():
-    cancel = True
 
 def execute(linear, angular, speed):
     if(angular == 0):

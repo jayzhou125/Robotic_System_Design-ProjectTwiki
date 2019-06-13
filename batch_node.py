@@ -3,9 +3,12 @@
 import sys
 import rospy
 from std_msgs.msg import String, Float32, Empty
+from geometry_msgs.msg import Twist
 from command_parser import *
 from batch_controller import execute
+import location
 
+pub_command = rospy.Publisher("/constant_command", Twist, queue_size=10)
 pub_dx = rospy.Publisher("/dx", Float32, queue_size=10)                     # publish delta x
 pub_dz = rospy.Publisher("/dz", Float32, queue_size=10)                     # publish delta z
 pub_kill = rospy.Publisher("/emergency_stop", Empty, queue_size=10)         # publish an emergency stop
@@ -13,6 +16,7 @@ pub_kill = rospy.Publisher("/emergency_stop", Empty, queue_size=10)         # pu
 def batch_node(f=None, dx=0, dz=0):
     global pub_command
     rospy.init_node("batch_publisher")
+    location.init()
     rospy.on_shutdown(cleanUp)
 
     # wait for all channels to connect
@@ -36,7 +40,6 @@ def batch_node(f=None, dx=0, dz=0):
         for command in f.readlines():
             execute(command)
     
-    cleanUp()
 
 # def publish(command):
 #         linear, angular, speed = parse_command(command)
