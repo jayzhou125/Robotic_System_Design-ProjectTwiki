@@ -8,7 +8,7 @@ from command_parser import *
 from batch_controller import execute
 import location
 
-pub_command = rospy.Publisher("/constant_command", Twist, queue_size=10)
+pub_command = rospy.Publisher("/kobuki_command", Twist, queue_size=10)
 pub_dx = rospy.Publisher("/dx", Float32, queue_size=10)                     # publish delta x
 pub_dz = rospy.Publisher("/dz", Float32, queue_size=10)                     # publish delta z
 pub_kill = rospy.Publisher("/emergency_stop", Empty, queue_size=10)         # publish an emergency stop
@@ -31,15 +31,18 @@ def batch_node(f=None, dx=0, dz=0):
         print "LIVE MODE: enter commands or q to quit"
 
         command = None
-        while command != "q":
+        while True:
             command = sys.stdin.readline().strip()
-            execute(command)
+            if command == "q":
+                break
+            execute(*parse_command(command))
     
     else:
         print str(f)
         for command in f.readlines():
-            execute(command)
+            execute(*parse_command(command))
     
+    cleanUp()
 
 # def publish(command):
 #         linear, angular, speed = parse_command(command)

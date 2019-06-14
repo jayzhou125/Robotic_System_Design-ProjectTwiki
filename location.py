@@ -6,7 +6,7 @@ from nav_msgs.msg import Odometry
 from tf.transformations import euler_from_quaternion
 from std_msgs.msg import Float32, Empty
 
-currentLocation = []
+currentLocation = (0, 0, 0)
 
 pub_reset = rospy.Publisher("/mobile_base/commands/reset_odometry", Empty, queue_size=10)
 
@@ -27,7 +27,7 @@ def odomCallback(data):
     x = data.pose.pose.position.x
     y = data.pose.pose.position.y
 	
-    currentLocation = [ x, y, degree ] # record the current location
+    currentLocation = ( x, y, degree ) # record the current location
     # msg = "(%.6f,%.6f) at %.6f degree." % (x, y, degree) # format current location
     # rospy.loginfo(msg) 	# print the location
 

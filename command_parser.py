@@ -18,7 +18,8 @@ def parse_command(command):
     # custom speed specified
     if tokens[-2] == "s":
         try:
-            speed = tokens[-1]
+            speed = float(tokens[-1])
+            print speed
         except ValueError:
             print "\tError: {0} is not a valid floating point number"
         
@@ -28,7 +29,7 @@ def parse_command(command):
             speed = 0
         
         tokens = tokens[:-2]
-        print tokens
+        print tokens, speed
     
     # simple move or turn command
     if len(tokens) == 2:
