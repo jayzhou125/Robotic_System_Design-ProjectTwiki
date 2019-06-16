@@ -13,7 +13,7 @@ def parse_command(command):
 
     # some things to ignore
     if len(tokens) < 2:
-        return linear, angular
+        return linear, angular, speed
 
     # custom speed specified
     if tokens[-2] == "s":
