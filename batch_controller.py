@@ -4,7 +4,7 @@ from std_msgs.msg import Empty
 import location
 import math
 
-SLEEP = 0.03
+SLEEP = 0.01
 DELTA_X = 0.5*SLEEP
 DELTA_Z = 1*SLEEP
 command = None
@@ -61,7 +61,7 @@ def _line(distance, speed):
 
     command = Twist()
     command.angular.z = 0
-    command.linear.x = 0.1 * sign
+    command.linear.x = 0.05 * sign
 
     while command.linear.x != 0 and not cancel:
         print cancel
@@ -177,7 +177,7 @@ def _arc(length, radius, speed):
 
     command = Twist()
 
-    command.linear.x = sign*0.1
+    command.linear.x = sign*0.05
 
     loops = 0
     theta_prev = 0
@@ -187,7 +187,7 @@ def _arc(length, radius, speed):
     while command.linear.x != 0 and not cancel:
         x, y, theta = location.currentLocation
         
-        cutoff = degrees - (turn_sign * (command.angular.z*9) ** 2) # temporary cutoff calculation
+        cutoff = degrees - (turn_sign * (command.angular.z*7) ** 2) # temporary cutoff calculation
 
         if ((theta < -1 and theta_prev > 1 and turn_sign > 0)	# loop over from 180 to -180 during positive rotation
         or (theta > 1 and theta_prev < -1 and turn_sign < 0)):	# loop over from -180 to 180 during negative rotation
@@ -206,7 +206,7 @@ def _arc(length, radius, speed):
         elif command.linear.x > -speed and command.linear.x < 0 and sign < 0:
             command.linear.x = max(command.linear.x - DELTA_X, -speed)
 
-        command.angular.z = location.currentVelocity/radius
+        command.angular.z = location.currentVelocity/radius * 1.3
 
         if abs(theta_total) >= abs(degrees):
             command = zero()
