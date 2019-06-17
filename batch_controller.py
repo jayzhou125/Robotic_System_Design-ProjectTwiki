@@ -4,51 +4,55 @@ from std_msgs.msg import Empty
 import location
 import math
 
+# initializations 
 SLEEP = 0.01
 DELTA_X = 0.5*SLEEP
 DELTA_Z = 1*SLEEP
 command = None
 cancel = False
 
-
+# stop
 def stop():
     global cancel
     cancel = True
 
+# terminate ? what is the difference?
 def terminate():
     global cancel
     cancel = True
 
+# not moving?
 def zero():
     t = Twist()
     t.angular.z = 0
     t.linear.x = 0
     return t
 
-pub_command = rospy.Publisher("/kobuki_command", Twist, queue_size=25)   # publish the command 
-emergency_stop = rospy.Subscriber("/emergency_stop", Empty, stop)
-kill = rospy.Subscriber("/kill", Empty, terminate)
+pub_command = rospy.Publisher("/kobuki_command", Twist, queue_size=25)  # publish the command 
+emergency_stop = rospy.Subscriber("/emergency_stop", Empty, stop)	# subscribe to emergency stop
+kill = rospy.Subscriber("/kill", Empty, terminate)			# subscribe to kill
 
-
+# execite the commands base of the speeds and commands given
 def execute(linear, angular, speed):
-    location.resetOdom()
+    location.resetOdom()	# reset the location
     rospy.sleep(SLEEP)
 
-    if(angular == 0):
+    if(angular == 0):	# forward/back
         _line(linear, speed)
-    elif(linear == 0):
+    elif(linear == 0):	# turn
         _turn(angular, speed)
-    else:
+    else:		# else it is an arc command
         _arc(linear, angular, speed)
 
-
+# forward and back in a certain distance
 def _line(distance, speed):
     global SLEEP, DELTA_X, command, pub_command, cancel
 
-    if distance < 0:
-	sign = -1
+    # determine the direction
+    if distance < 0:	
+	sign = -1	# back 
     else:
-        sign = 1
+        sign = 1	# forward
 
     command = Twist()
     command.angular.z = 0
