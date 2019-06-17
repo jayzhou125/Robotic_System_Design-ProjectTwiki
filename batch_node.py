@@ -27,22 +27,22 @@ def batch_node(f=None, dx=0, dz=0):
     pub_dx.publish(dx)
     pub_dz.publish(dz)
 
-    if f == None:
-        print "LIVE MODE: enter commands or q to quit"
+    if f == None:       # if no command, get command from user's input
+        print "LIVE MODE: enter commands or q to quit"  
 
-        command = None
+        command = None  # initialize the command    
         while True:
-            command = sys.stdin.readline().strip()
-            if command == "q":
+            command = sys.stdin.readline().strip()  # get the command
+            if command == "q":  # if q was the command, quit
                 break
-            execute(*parse_command(command))
+            execute(*parse_command(command))    # parse the command and execute the commands
     
     else:
-        print str(f)
-        for command in f.readlines():
-            execute(*parse_command(command))
+        print str(f)    # print the command as string to see what command is given
+        for command in f.readlines():   # get the command or series of commands
+            execute(*parse_command(command))    # parse the commands and execite them
     
-    cleanUp()
+    cleanUp()   # done and exit
 
 # def publish(command):
 #         linear, angular, speed = parse_command(command)
@@ -50,7 +50,7 @@ def batch_node(f=None, dx=0, dz=0):
 #         pub_command.publish(command_string)
 
 def cleanUp():
-    pub_kill.publish(Empty())
+    pub_kill.publish(Empty())   
     print "Exiting..."
 
 
@@ -63,11 +63,11 @@ if __name__ == "__main__":
     parser.add_argument("-z", "--delta-z", type=float, nargs='?', const=0, help="set the angular acceleration constant")
     parser.add_argument("-f", "--file", type=FileType("r"), help="file with batch commands to transmit to the robot")
 
-    args = parser.parse_args()
+    args = parser.parse_args()      # get the commands
 
     dx = args.delta_x
     dz = args.delta_z
     f = args.file
     
 
-    batch_node(f, dx, dz)
+    batch_node(f, dx, dz)   # process the commands
