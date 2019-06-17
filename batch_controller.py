@@ -67,38 +67,41 @@ def _line(distance, speed):
         print cancel
         x, y, theta = location.currentLocation
         cutoff = distance - (sign * (command.linear.x*2) ** 2) # temporary cutoff calculation
-        if x >= cutoff and sign > 0:
-            command.linear.x -= DELTA_X
-	elif x <= cutoff and sign < 0:
-            command.linear.x += DELTA_X
-
-        elif command.linear.x < speed and command.linear.x > 0 and sign > 0:
+        if x >= cutoff and sign > 0: 	 	# if travelled to the cutoff point
+            command.linear.x -= DELTA_X 	# started to decrease the speed slowly
+	elif x <= cutoff and sign < 0:		# if not reached the cutoff point
+            command.linear.x += DELTA_X		# increase the speed slowly
+	
+	# speed smoother
+        elif command.linear.x < speed and command.linear.x > 0 and sign > 0:	
             command.linear.x = min(command.linear.x + DELTA_X, speed)
         elif command.linear.x > -speed and command.linear.x < 0 and sign < 0:
             command.linear.x = max(command.linear.x - DELTA_X, -speed)
 
-	if abs(x) >= abs(distance):
+	if abs(x) >= abs(distance):		# if reach the distance specified, stop 
             command.linear.x = 0
         
         if (command.linear.x < 0 and sign > 0) or (command.linear.x < 0 and sign > 0):
             command.linear.x = 0
 
-	print x, cutoff, command.linear.x
-	command.angular.z = 0
-        pub_command.publish(command)
-        rospy.sleep(SLEEP)
+	print x, cutoff, command.linear.x	# print check
+	command.angular.z = 0			# make sure it is not turning 
+        pub_command.publish(command)		# publish the command
+        rospy.sleep(SLEEP)			
     
-    pub_command.publish(zero())
+    pub_command.publish(zero())			# stop the robot
     
 
 def _turn(degrees, speed):
     global SLEEP, DELTA_Z, command, pub_command, cancel
 
+    # determine the direction
     if degrees < 0:
-	sign = -1
-    else:
-        sign = 1
+	sign = -1 	# right turn
+    else:	
+        sign = 1	# left turn
 
+    # initialization
     command = Twist()
     command.linear.x = 0
     command.angular.z = 0.1 * sign
@@ -109,15 +112,16 @@ def _turn(degrees, speed):
 
     while command.angular.z != 0 and not cancel:
         x, y, theta = location.currentLocation
-        cutoff = degrees - (sign * (command.angular.z*5.5) ** 2) # temporary cutoff calculation
+        cutoff = degrees - (sign * (command.angular.z*5.5) ** 2) 	# temporary cutoff calculation
 
-	if ((theta < 0 and theta_prev > 0 and sign > 0)	# loop over from 180 to -180 during positive rotation
-        or (theta > 0 and theta_prev < 0 and sign < 0)):	# loop over from -180 to 180 during negative rotation
+	# for turns bigger than 180 degree
+	if ((theta < 0 and theta_prev > 0 and sign > 0)			# loop over from 180 to -180 during positive rotation
+        or (theta > 0 and theta_prev < 0 and sign < 0)):		# loop over from -180 to 180 during negative rotation
             loops += 1
         
         theta_total = theta + (sign * 360 * loops)
 
-
+	# smoother
         if theta_total >= cutoff and theta_prev != theta and sign > 0:
             command.angular.z -= DELTA_Z
 	elif theta_total <= cutoff and theta_prev != theta and sign < 0:
@@ -132,14 +136,14 @@ def _turn(degrees, speed):
 
         theta_prev = theta
 
-	if abs(theta_total) >= abs(degrees):
-            command.angular.z = 0
+	if abs(theta_total) >= abs(degrees):				# if degrees match the specified 
+            command.angular.z = 0					# stop
 
-        if (command.angular.z < 0 and sign > 0) or (command.angular.z < 0 and sign > 0):
+        if (command.angular.z < 0 and sign > 0) or (command.angular.z < 0 and sign > 0):	
             command.angular.z = 0
         
-	print theta, theta_total, cutoff, command.angular.z
-	command.linear.x = 0
+	print theta, theta_total, cutoff, command.angular.z		# print to check the data
+	command.linear.x = 0						# make sure the
         pub_command.publish(command)
         rospy.sleep(SLEEP)
     
