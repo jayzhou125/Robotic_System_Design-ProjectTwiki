@@ -5,7 +5,7 @@ import rospy
 from std_msgs.msg import String, Float32, Empty
 from geometry_msgs.msg import Twist
 from command_parser import *
-from batch_controller import execute
+from batch_controller import execute, cancel
 import location
 
 pub_command = rospy.Publisher("/kobuki_command", Twist, queue_size=10)
@@ -35,11 +35,17 @@ def batch_node(f=None, dx=0, dz=0):
             command = sys.stdin.readline().strip()
             if command == "q":
                 break
+            if cancel:
+                print "in stop mode, command canceled"
+                continue
             execute(*parse_command(command))
     
     else:
         print str(f)
         for command in f.readlines():
+            if cancel:
+                print "in stop mode, commands canceled"
+                break
             execute(*parse_command(command))
     
     cleanUp()

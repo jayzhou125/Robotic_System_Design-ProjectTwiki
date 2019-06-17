@@ -8,7 +8,8 @@ from kobuki_msgs.msg import Led, BumperEvent, ButtonEvent
 
 pub_velocity = rospy.Publisher("/mobile_base/commands/velocity", Twist, queue_size=10)
 pub_led1 = rospy.Publisher('/mobile_base/commands/led1', Led, queue_size=10)
-
+pub_stop = rospy.Publisher('/emergency_stop', Empty, queue_size=10)
+pub_resume = rospy.Publisher('/resume', Empty, queue_size=10)
 
 def zero():
     val = Twist()
@@ -38,7 +39,7 @@ def resumeCallback(data):
 def bumperCallback(data):
     global bumpers, obstructed
     if data.state == 1:
-        doStop()
+        pub_stop.publish(Empty())
 	bumpers[data.bumper] = True
 	obstructed = True
 	print "obstructed"
@@ -53,9 +54,9 @@ def buttonCallback(data):
     global stop
     if data.button == 0 and data.state == 1: #B0 and pressed
 	if stop:
-            doStart()
+            pub_resume.publish(Empty())
         else:
-            doStop()
+            pub_stop.publish(Empty())
 
 def doStop():
     global targetCommand, currentCommand, stop
@@ -82,7 +83,7 @@ def doStart():
     pub_velocity.publish(zero())
 
 def cleanUp():
-    doStop()
+    pub_stop.publish(Empty())
     pub_velocity.publish(currentCommand)
     rospy.sleep(1)
     ledUpdate(0)
@@ -162,5 +163,6 @@ if __name__ == '__main__':
 
     parser.add_argument("-r", "--raw", dest="raw", action="store_const", const=True, default=False, help="use this option to disable constant_command's internal smoothing functionality")
     args = parser.parse_args()
+    raw = args.raw
     constantCommand()
 

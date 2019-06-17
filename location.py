@@ -7,6 +7,8 @@ from tf.transformations import euler_from_quaternion
 from std_msgs.msg import Float32, Empty
 
 currentLocation = (0, 0, 0)
+currentVelocity = 0
+
 verbose = False
 
 pub_reset = rospy.Publisher("/mobile_base/commands/reset_odometry", Empty, queue_size=10)
@@ -16,7 +18,7 @@ def resetOdom():
 
 
 def odomCallback(data):
-    global currentLocation
+    global currentLocation, currentVelocity, verbose
     # Convert quaternion to degree
     q = [data.pose.pose.orientation.x,
          data.pose.pose.orientation.y,
@@ -29,8 +31,9 @@ def odomCallback(data):
     y = data.pose.pose.position.y
 	
     currentLocation = ( x, y, degree ) # record the current location
+    currentVelocity = data.twist.twist.linear.x
     if verbose:
-        msg = "(%.6f,%.6f) at %.6f degree." % (x, y, degree) # format current location
+        msg = "(%.6f,%.6f) at %.6f degree, moving %.6f" % (x, y, degree, currentVelocity) # format current location
         rospy.loginfo(msg) 	# print the location
 
 def init():
@@ -42,9 +45,11 @@ if __name__ == '__main__':
 
     parser.add_argument("-v", "--verbose", dest="verbose", action="store_const", const=True, default=False, help="enable verbose position logging")
     args = parser.parse_args()
+    verbose = args.verbose
 
     rospy.init_node("location_node", anonymous=True) # Initialize this node
     init()
+    rospy.spin()
 
 # global MAX_SPEED = 0.8 # this is used to mark when acceleration hits peak (so we can know hwen to slow down)
 
