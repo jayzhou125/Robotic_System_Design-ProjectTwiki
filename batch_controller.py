@@ -4,18 +4,12 @@ from std_msgs.msg import Empty
 import location
 import math
 
-<<<<<<< HEAD
 SLEEP = 0.03
-=======
-# initializations 
-SLEEP = 0.01
->>>>>>> 162945f2ab011cd5445da526f7267577e584c3df
 DELTA_X = 0.5*SLEEP
 DELTA_Z = 1*SLEEP
 command = None
 cancel = False
 
-<<<<<<< HEAD
 
 def stop(data):
     global cancel
@@ -26,15 +20,6 @@ def start(data):
     cancel = False
 
 def terminate(data):
-=======
-# stop
-def stop():
-    global cancel
-    cancel = True
-
-# terminate ? what is the difference?
-def terminate():
->>>>>>> 162945f2ab011cd5445da526f7267577e584c3df
     global cancel
     cancel = True
 
