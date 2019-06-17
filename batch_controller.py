@@ -6,7 +6,7 @@ import math
 
 SLEEP = 0.01
 DELTA_X = 0.5*SLEEP
-DELTA_Z = 3.5*SLEEP
+DELTA_Z = 3.2*SLEEP
 command = None
 cancel = False
 
