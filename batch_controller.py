@@ -5,7 +5,7 @@ import location
 import math
 
 SLEEP = 0.01
-DELTA_X = 0.7*SLEEP 	# was 0.5
+DELTA_X = 0.65*SLEEP 	# was 0.5
 DELTA_Z = 1.3*SLEEP	# was 1
 command = None
 cancel = False
