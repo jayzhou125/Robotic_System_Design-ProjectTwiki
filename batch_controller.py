@@ -45,27 +45,17 @@ def zero():
     t.linear.x = 0
     return t
 
-<<<<<<< HEAD
 pub_command = rospy.Publisher("/kobuki_command", Twist, queue_size=25)   # publish the command 
 emergency_stop = rospy.Subscriber("/emergency_stop", Empty, stop)
 resume = rospy.Subscriber("/resume", Empty, start)
 kill = rospy.Subscriber("/kill", Empty, terminate)
 
-=======
-pub_command = rospy.Publisher("/kobuki_command", Twist, queue_size=25)  # publish the command 
-emergency_stop = rospy.Subscriber("/emergency_stop", Empty, stop)	# subscribe to emergency stop
-kill = rospy.Subscriber("/kill", Empty, terminate)			# subscribe to kill
->>>>>>> 162945f2ab011cd5445da526f7267577e584c3df
 
 # execite the commands base of the speeds and commands given
 def execute(linear, angular, speed):
-<<<<<<< HEAD
     location.resetOdom()
     rospy.sleep(0.1)
-=======
-    location.resetOdom()	# reset the location
-    rospy.sleep(SLEEP)
->>>>>>> 162945f2ab011cd5445da526f7267577e584c3df
+
 
     if(angular == 0):	# forward/back
         _line(linear, speed)
