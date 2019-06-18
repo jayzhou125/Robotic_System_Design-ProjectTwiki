@@ -1,6 +1,4 @@
 up 1 s 0.8
-left 90 s 0.9
-down left 1.57 r 1 s 0.4
-left 90 s 0.5
-up 1 s 0.3
-right 90 s 0.6
+right 180 s 0.8
+down 0.25 s 0.8
+left 90 s 0.8
