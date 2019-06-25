@@ -46,58 +46,37 @@ def mouseEvent(event, x, y, flags, param):
 
     print 'min_color:', min_color, 'max_color:', max_color
 
-###################################Need to fix after this
 def main():
-global blur_image, min_color, max_color, first_color, mask_image
-color_image = cv2.imread(
-../start_img.jpg
-, cv2.IMREAD_COLOR)
-blur_image = cv2.GaussianBlur(color_image, (5, 5), 0)
-cv2.namedWindow(
-Blur Image
-)
-cv2.setMouseCallback(
-Blur Image
-, mouseEvent)
-cv2.imshow(
-Blur Image
-, blur_image)
-while True:
-if not first_color:
-cv2.imshow(
-Mask
-, mask_image)
-key = cv2.waitKey(1) & 0xFF
-if key == ord(
-q
-):
-break;
-elif key == ord(
- 
-):
-(cnts, hierarchy) = cv2.findContours(mask_image.copy(), cv2.RETR_TREE,
-cv2.CHAIN_APPROX_SIMPLE)
-print 
-number of contours:
-, len(cnts)
-print 
-len(heirarchy):
-, len(hierarchy), len(hierarchy[0])
-print hierarchy
-for i in range(0, len(cnts)):
-c = cnts[i]
-if cv2.contourArea(c) < 100:
-continue
-if not hierarchy[0][i][3] == -1:
-continue
-x,y,w,h = cv2.boundingRect(c)
-print hierarchy[0][i], cv2.contourArea(c)
-cv2.rectangle(blur_image, (x,y), (x + w, y + h), (0, 255, 0), 3);
-cv2.imshow(
-Bounding
-, blur_image)
-cv2.destroyAllWindows()
-if __name__ == 
-__main__
-:
-main()
+  global blur_image, min_color, max_color, first_color, mask_image
+  color_image = cv2.imread('../start_img.jpg', cv2.IMREAD_COLOR)
+  blur_image = cv2.GaussianBlur(color_image, (5, 5), 0)
+  
+  cv2.namedWindow('Blur Image')
+  cv2.setMouseCallback('Blur Image', mouseEvent)
+  cv2.imshow('Blur Image', blur_image)
+  
+  while True:
+    if not first_color:
+      cv2.imshow('Mask', mask_image)
+    key = cv2.waitKey(1) & 0xFF
+    if key == ord('q'):
+      break;
+    elif key == ord(' '):
+      (cnts, hierarchy) = cv2.findContours(mask_image.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+      print 'number of contours:', len(cnts)
+      print 'len(heirarchy):', len(hierarchy), len(hierarchy[0])
+      print hierarchy
+      for i in range(0, len(cnts)):
+        c = cnts[i]
+        if cv2.contourArea(c) < 100:
+          continue
+        if not hierarchy[0][i][3] == -1:
+          continue
+        x,y,w,h = cv2.boundingRect(c)
+        print hierarchy[0][i], cv2.contourArea(c)
+        cv2.rectangle(blur_image, (x,y), (x + w, y + h), (0, 255, 0), 3);
+      cv2.imshow('Bounding', blur_image)
+  cv2.destroyAllWindows()
+  
+if __name__ == '__main__':
+  main()
