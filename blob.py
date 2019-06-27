@@ -3,7 +3,11 @@
 import rospy
 from cmvision.msg import Blobs, Blob
 
+mergedBlobs = Blobs()
+colors = []
+
 def blobsCallback(data):
+	b = Blob()
 	x = 0
 	y = 0
 	area = 0
