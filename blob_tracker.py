@@ -39,7 +39,7 @@ def track_blobs():
         elif centerOffset < -0.005 * image_width:
             command.angular.z = max(-Z_MAX, -0.01 * centerOffset)
             
-        pub_command(command)
+        pub_command.publish(command)
     
 
 def setRawBlobs(blobs):
