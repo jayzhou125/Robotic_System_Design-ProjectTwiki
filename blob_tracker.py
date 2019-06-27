@@ -6,7 +6,6 @@ from geometry_msgs.msg import Twist
 from cmvision.msg import Blobs, Blob
 from sensor_msgs.msg import Image
 import location
-import 
 
 pub_command = rospy.Publisher("/kobuki_command", Twist, queue_size=10)
 pub_stop = rospy.Publisher("/emergency_stop", Empty, queue_size=10)
