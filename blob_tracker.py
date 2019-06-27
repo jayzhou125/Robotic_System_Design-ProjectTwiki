@@ -30,7 +30,10 @@ def track_blobs():
         command = zero()
         trackingBlob = mergeBlobs()
         centerOffset = rawBlobs.image_width - trackingBlob.x
-        if centerOffset > 0.005 * image_width:
+        if trackingBlob.x == 0 and trackingBlob.y == 0:
+            continue
+
+        elif centerOffset > 0.005 * image_width:
             command.angular.z = min(Z_MAX, 0.01 * centerOffset)
             
         elif centerOffset < -0.005 * image_width:
@@ -59,7 +62,7 @@ def mergeBlobs():
     top = 0;
     bottom = 0;
     area = 0;
-    for b in rawBlobs:
+    for b in rawBlobs.blobs:
         x = x + (b.x * b.area)
         y = y + (b.y * b.area)
         left = left + (b.left * b.area)
