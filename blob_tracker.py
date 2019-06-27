@@ -76,6 +76,8 @@ def mergeBlobs():
     result.top = top / area
     result.bottom = bottom / area
     result.area = x * y
+
+    print "blob merged center is + (" + x + ", " + y + ")"
     return result
 
 
