@@ -35,7 +35,7 @@ def track_blobs():
             continue
 
         print(centerOffset)
-        if centerOffset > center + 20:
+        if centerOffset > center + 20:  # center is the midpoint of the image
             command.angular.z = max(-Z_MAX, centerOffset/rawBlobs.image_width)
             
         elif centerOffset < center - 20:
