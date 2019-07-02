@@ -29,7 +29,7 @@ def track_blobs():
     while(True):
         command = zero() 
         trackingBlob = mergeBlobs()
-        centerOffset = rawBlobs.image_width - trackingBlob.x
+        centerOffset = rawBlobs.image_width//2 - trackingBlob.x
         if trackingBlob.x == 0 and trackingBlob.y == 0:
             continue
 
