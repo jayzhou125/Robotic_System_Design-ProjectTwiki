@@ -16,10 +16,10 @@ mergedBlobs = Blobs()
 width = 0
 
 def init():
-    rospy.init_node("blob_tracker")
-    location.init()
-    rospy.on_shutdown(cleanUp)
-    rospy.Subscriber("/blobs", Blobs, setRawBlobs)
+    rospy.init_node("blob_tracker")     # initialize the node
+    location.init()                     # init the location
+    rospy.on_shutdown(cleanUp)          
+    rospy.Subscriber("/blobs", Blobs, setRawBlobs)  # subscribe to blobs
 
 def track_blobs():
     global rawBlobs, pub_command
@@ -27,7 +27,7 @@ def track_blobs():
     Z_MAX = 1.0
 
     while(True):
-        command = zero()
+        command = zero() 
         trackingBlob = mergeBlobs()
         centerOffset = rawBlobs.image_width - trackingBlob.x
         if trackingBlob.x == 0 and trackingBlob.y == 0:
