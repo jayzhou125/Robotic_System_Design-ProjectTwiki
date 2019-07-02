@@ -34,13 +34,14 @@ def track_blobs():
         if trackingBlob.x == 0 and trackingBlob.y == 0:
             continue
 
-        print(centerOffset)
         if centerOffset > 20:
             command.angular.z = min(Z_MAX, centerOffset/rawBlobs.image_width)
-            
+            print("turning left")
         elif centerOffset < -20:
             command.angular.z = max(-Z_MAX, centerOffset/rawBlobs.image_width)
-            
+            print("turning right")
+        
+        
         pub_command.publish(command)
     
 
