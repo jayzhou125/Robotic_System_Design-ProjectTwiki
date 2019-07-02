@@ -7,10 +7,10 @@ from cmvision.msg import Blobs, Blob
 from sensor_msgs.msg import Image
 import location
 
-pub_command = rospy.Publisher("/kobuki_command", Twist, queue_size=10)
-pub_stop = rospy.Publisher("/emergency_stop", Empty, queue_size=10)
+pub_command = rospy.Publisher("/kobuki_command", Twist, queue_size=10)  # publish command
+pub_stop = rospy.Publisher("/emergency_stop", Empty, queue_size=10)     # publish stop
 
-
+# initialization
 rawBlobs = Blobs()
 mergedBlobs = Blobs()
 width = 0
@@ -24,33 +24,34 @@ def init():
 def track_blobs():
     global rawBlobs, pub_command
 
-    Z_MAX = 0.5
+    Z_MAX = 0.5  # maximum speed
 
     while(True):
         command = zero() 
-        trackingBlob = mergeBlobs()
-        center = rawBlobs.image_width//2
-        centerOffset = center - trackingBlob.x # 
-        if trackingBlob.x == 0 and trackingBlob.y == 0:
+        trackingBlob = mergeBlobs()  # get the bolb to follow
+        center = rawBlobs.image_width//2    # the center of the image
+        centerOffset = center - trackingBlob.x  # the offset that the ball need to travel 
+        if trackingBlob.x == 0 and trackingBlob.y == 0:     # no bolb is found
             continue
 
-        speed = 4 * centerOffset/float(rawBlobs.image_width)
+        speed = 4 * centerOffset/float(rawBlobs.image_width)    # calculate the right amount of speed for the command
 
-        if centerOffset > 20:
-            command.angular.z = min(Z_MAX, speed)
+        if centerOffset > 20:   # if the offset is bigger than 20
+            command.angular.z = min(Z_MAX, speed) # turn left and follow 
             # print([command.angular.z, centerOffset/rawBlobs.image_width])
-        elif centerOffset < -20:
-            command.angular.z = max(-Z_MAX, speed)
+        elif centerOffset < -20:    # if the offset is smaller than -20
+            command.angular.z = max(-Z_MAX, speed)  # turn right and follow the ball
             # print([command.angular.z, centerOffset/rawBlobs.image_width])
         
 
-        pub_command.publish(command)
+        pub_command.publish(command)    # publish the twist command to the kuboki node
     
 
 def setRawBlobs(blobs):
     global rawBlobs
     rawBlobs = blobs
 
+# stop the robot
 def zero():
     result = Twist();
     result.angular.z = 0
@@ -58,6 +59,7 @@ def zero():
 
     return result
 
+# method to get the right bolb to track
 def mergeBlobs():
     global rawBlobs
     x = 0;
