@@ -34,12 +34,14 @@ def track_blobs():
         if trackingBlob.x == 0 and trackingBlob.y == 0:
             continue
 
+        speed = 4 * centerOffset/float(rawBlobs.image_width)
+
         if centerOffset > 20:
-            command.angular.z = min(Z_MAX, centerOffset/float(rawBlobs.image_width))
-            print([command.angular.z, centerOffset*4/rawBlobs.image_width])
+            command.angular.z = min(Z_MAX, speed)
+            # print([command.angular.z, centerOffset/rawBlobs.image_width])
         elif centerOffset < -20:
-            command.angular.z = max(-Z_MAX, centerOffset/float(rawBlobs.image_width))
-            print([command.angular.z, centerOffset*4/rawBlobs.image_width])
+            command.angular.z = max(-Z_MAX, speed)
+            # print([command.angular.z, centerOffset/rawBlobs.image_width])
         
 
         pub_command.publish(command)
