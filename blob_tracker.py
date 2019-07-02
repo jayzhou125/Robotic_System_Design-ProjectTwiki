@@ -24,12 +24,13 @@ def init():
 def track_blobs():
     global rawBlobs, pub_command
 
-    Z_MAX = 1.0
+    Z_MAX = 0.5
 
     while(True):
         command = zero() 
         trackingBlob = mergeBlobs()
         centerOffset = rawBlobs.image_width - trackingBlob.x
+        print(centerOffset)
         if trackingBlob.x == 0 and trackingBlob.y == 0:
             continue
 
@@ -81,7 +82,7 @@ def mergeBlobs():
         result.bottom = bottom / area
         result.area = x * y
 
-    print "blob merged center is + (", x, ", ", y, ")"
+    # print "blob merged center is + (", x, ", ", y, ")"
     return result
 
 
