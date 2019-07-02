@@ -60,6 +60,9 @@ def zero():
     return result
 
 # method to get the right bolb to track
+# for part 2： the goal kicker：
+# 1. we could use the built-in filter to filter the smaller bolbs
+# 2. we need to able to find the right bolb to that overlap with two different colors
 def mergeBlobs():
     global rawBlobs
     x = 0;
