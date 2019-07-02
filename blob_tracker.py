@@ -35,10 +35,10 @@ def track_blobs():
             continue
 
         print(centerOffset)
-        if centerOffset > center + 20:
+        if centerOffset > 20:
             command.angular.z = max(-Z_MAX, centerOffset/rawBlobs.image_width)
             
-        elif centerOffset < center - 20:
+        elif centerOffset < -20:
             command.angular.z = min(Z_MAX, centerOffset/rawBlobs.image_width)
             
         pub_command.publish(command)
