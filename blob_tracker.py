@@ -30,10 +30,10 @@ def track_blobs():
         command = zero() 
         trackingBlob = mergeBlobs()
         centerOffset = rawBlobs.image_width - trackingBlob.x
-        print(centerOffset)
         if trackingBlob.x == 0 and trackingBlob.y == 0:
             continue
 
+        print(centerOffset)
         elif centerOffset > 0.005 * rawBlobs.image_width:
             command.angular.z = max(-Z_MAX, -0.01 * centerOffset)
             
