@@ -37,8 +37,9 @@ kill = rospy.Subscriber("/kill", Empty, terminate)
 
 
 # execite the commands base of the speeds and commands given
-def execute(linear, angular, speed):
-    location.resetOdom()
+def execute(linear, angular, speed, reset=True):
+    if reset:
+        location.resetOdom()
     rospy.sleep(0.1)
 
 

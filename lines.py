@@ -1,4 +1,4 @@
-from math import tan, radians
+from math import sin, cos, tan, atan, radians
 
 class Line():
     def __init__(self, **kwargs):
@@ -58,6 +58,19 @@ class Line():
             print("Math Exploded: y = {0} and {1}".format(y, y_alt))
         
         return round(x, 5), round(y, 5)
+    
+    def angle(self, useDegrees=False):
+        if not useDegrees:
+            return atan(self.slope)
+        else:
+            return degrees(atan(self.slope))
+    
+    def findPointFrom(self, x, y, distance):
+        dx = distance * cos(atan(self.slope))
+        dy = distance * sin(atan(self.slope))
+
+        return (x + dx), (y + dy)
+
 
 
 
