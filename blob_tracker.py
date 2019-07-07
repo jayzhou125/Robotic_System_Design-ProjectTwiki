@@ -45,9 +45,8 @@ def track_blobs():
             command.angular.z = max(-Z_MAX, speed)  # turn right and follow the ball
             # print([command.angular.z, centerOffset/rawBlobs.image_width])
         
-
         pub_command.publish(command)    # publish the twist command to the kuboki node
-    
+
 def setRawBlobs(blobs):
     global rawBlobs
     rawBlobs = blobs
@@ -89,7 +88,7 @@ def mergeBlobs():
         result.top = top / area
         result.bottom = bottom / area
         result.area = x * y
-	result.name = name # added AS what gets assigned to trackingBlob
+	result.name = name # added AS; what gets assigned to trackingBlob
 
     # print "blob merged center is + (", x, ", ", y, ")"
     return result
