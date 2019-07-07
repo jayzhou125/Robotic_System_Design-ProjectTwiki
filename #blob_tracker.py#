@@ -36,8 +36,6 @@ def track_blobs():
 
         speed = 4 * centerOffset/float(rawBlobs.image_width)    # calculate the right amount of speed for the command
 
-        print "Tracking Blob Object Attr: ", trackingBlob.name, "<<" # added AS
-
         if centerOffset > 20:   # if the offset is bigger than 20
             command.angular.z = min(Z_MAX, speed) # turn left and follow 
             # print([command.angular.z, centerOffset/rawBlobs.image_width])
@@ -48,6 +46,7 @@ def track_blobs():
 
         pub_command.publish(command)    # publish the twist command to the kuboki node
     
+
 def setRawBlobs(blobs):
     global rawBlobs
     rawBlobs = blobs
@@ -69,7 +68,6 @@ def mergeBlobs():
     top = 0;
     bottom = 0;
     area = 0;
-    name = ""; # added AS
     for b in rawBlobs.blobs:
         x = x + (b.x * b.area)
         y = y + (b.y * b.area)
@@ -78,7 +76,6 @@ def mergeBlobs():
         top = top + (b.top * b.area)
         bottom = bottom + (b.bottom * b.area)
         area = area + b.area
-	name = b.name # added AS
     result = Blob()
 
     if area > 0:
@@ -89,10 +86,11 @@ def mergeBlobs():
         result.top = top / area
         result.bottom = bottom / area
         result.area = x * y
-	result.name = name # added AS what gets assigned to trackingBlob
 
     # print "blob merged center is + (", x, ", ", y, ")"
     return result
+
+
 
 def cleanUp():
     pub_stop.publish(Empty())
