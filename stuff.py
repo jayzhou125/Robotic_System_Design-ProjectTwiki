@@ -15,6 +15,13 @@ def keep_turning(speed)
     command.angular.z = speed
     pub_command.publish(command)    # publish the twist command to the kuboki node
 
+# stop the robot
+def zero():
+    result = Twist();
+    result.angular.z = 0
+    result.linear.x = 0
+
+    return result
 
 # keep turning left until the ball and the goal is find
 def scan():
@@ -27,20 +34,25 @@ def scan():
 
     # if the ball and the goal is not found yet
     while ballNotFound and goalNotFound:
-        if trackingBlob.name == "blueball" and trackingBlob.area > 1000000000:
+        if trackingBlob.name == "blueball":
             # record odom
             ball_x, ball_y, ball_angle = location.currentLocation
             # ball is now found, set to False
             ballNotFound = False
-            print "blueball found, area", trackingBlob.area
-        if trackingBlob.name == "greenline" and trackingBlob.area > 1000000000:
+            command = zero()
+            print "blueball found"
+        if trackingBlob.name == "greenline":
             # record odom
             goal_x, goal_y, goal_angle = location.currentLocation
             # goal is now found, set to False
             goalNotFound = False
-            print "yellogoal found, area", trackingBlob.area
+            command = zero()
+            print "yellogoal found, area"
+
 
     keep_turning(Z_MAX)
+
+    return 
 
         # # find_ball()
         # # find_goal()
