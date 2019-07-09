@@ -87,26 +87,26 @@ def zero():
 def mergeBlobs():
     global rawBlobs
 
-    mergedBlobs = {}
+    merged = {}
 
     for b in rawBlobs.blobs:
         mergeTarget = Blob()
         mergeNeeded = False
         
         #check to see if there is an existing blob to merge with
-        if b.name in mergedBlobs.keys: 
-            for m in mergedBlobs[b.name]:
+        if b.name in merged.keys: 
+            for m in merged[b.name]:
                 if overlaps(b, m):
                     mergeTarget = m
                     mergeNeeded = True
                     break
         
         else: # no blobs by that name
-            mergeBlobs[b.name] = []
+            merged[b.name] = []
         
         # merge
         if not mergeNeeded:
-            mergeBlobs[b.name].append(b)
+            merged[b.name].append(b)
         else: # merge needed
             mergeTarget.left = min(mergeTarget.left, b.left)
             mergeTarget.right = max(mergeTarget.right, b.right)
@@ -114,7 +114,7 @@ def mergeBlobs():
             mergeTarget.bottom = max(mergeTarget.bottom, b.bottom)
             mergeTarget.area = (mergeTarget.right - mergeTarget.left) * (mergeTarget.bottom - mergeTarget.top)
     
-    for m in mergeBlobs:
+    for m in merged:
         m.sort(key=lambda x: x.area, reverse=True)
 
 
