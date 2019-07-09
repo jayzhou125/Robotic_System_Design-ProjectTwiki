@@ -59,30 +59,30 @@ def zero():
 
     return result
 
-def mergeBlobs():
-    # try out the area param simple detection
-    global rawBlobs
-    result = Blob()
+# def mergeBlobs():
+#     # try out the area param simple detection
+#     global rawBlobs
+#     result = Blob()
 
-    params = cv2.SimpleBlobDetector_Params()
-	# params.minThreshold = 0
-	# params.maxThreshold = 255
-	# params.filterByArea = True
-    params.minArea = 0.01 * rawBlobs.image_width * rawBlobs.image_height # tenth of the image size
-    params.maxArea = rawBlobs.image_width * rawBlobs.image_height
-	# params.filterByCircularity = True
-	# params.minCircularity = 0.1
-	# params.filterByConvexity = False
-	# params.minConvexity = 0.9
-	# params.filterByInertia = False
-	# params.minInertiaRatio = 0.5
-    ver = (cv2.__version__).split('.')
-    if int(ver[0]) < 3:
-        result = cv2.SimpleBlobDetector(params)
-    else:
-    	result = cv2.SimpleBlobDetector_create(params)
+#     params = cv2.SimpleBlobDetector_Params()
+# 	# params.minThreshold = 0
+# 	# params.maxThreshold = 255
+# 	# params.filterByArea = True
+#     params.minArea = 0.01 * rawBlobs.image_width * rawBlobs.image_height # tenth of the image size
+#     params.maxArea = rawBlobs.image_width * rawBlobs.image_height
+# 	# params.filterByCircularity = True
+# 	# params.minCircularity = 0.1
+# 	# params.filterByConvexity = False
+# 	# params.minConvexity = 0.9
+# 	# params.filterByInertia = False
+# 	# params.minInertiaRatio = 0.5
+#     ver = (cv2.__version__).split('.')
+#     if int(ver[0]) < 3:
+#         result = cv2.SimpleBlobDetector(params)
+#     else:
+#     	result = cv2.SimpleBlobDetector_create(params)
 
-    return result
+#     return result
 
 def mergeBlobs():
     global rawBlobs
