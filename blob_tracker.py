@@ -28,12 +28,17 @@ def track_blobs():
 
     while(True):
         command = zero() 
-        trackingBlob = mergeBlobs()  # get the bolb to follow
-        center = rawBlobs.image_width//2    # the center of the image
-        centerOffset = center - trackingBlob.x  # the offset that the ball need to travel 
-        if trackingBlob.x == 0 and trackingBlob.y == 0:     # no bolb is found
+        mergedBlobs = mergeBlobs()
+        trackingBlob = None
+
+        if "blueball" in mergedBlobs.keys:
+            trackingBlob = mergedBlobs["blueball"][1]
+        else:
             continue
 
+        center = rawBlobs.image_width//2    # the center of the image
+        centerOffset = center - trackingBlob.x  # the offset that the ball need to travel 
+        
         speed = 4 * centerOffset/float(rawBlobs.image_width)    # calculate the right amount of speed for the command
 
         print "Tracking Blob Object Attr: ", trackingBlob.name, "<<" # added AS
