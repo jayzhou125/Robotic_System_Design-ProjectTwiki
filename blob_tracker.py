@@ -119,8 +119,8 @@ def mergeBlobs():
             mergeTarget.bottom = max(mergeTarget.bottom, b.bottom)
             mergeTarget.area = (mergeTarget.right - mergeTarget.left) * (mergeTarget.bottom - mergeTarget.top)
     
-    for m in merged:
-        m.sort(key=lambda x: x.area, reverse=True)
+    for m in merged.keys():
+        merged[m].sort(key=lambda x: x.area, reverse=True)
     
     return merged
 
