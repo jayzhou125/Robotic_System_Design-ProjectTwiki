@@ -32,7 +32,7 @@ def track_blobs():
         trackingBlob = None
 
         if "blueball" in mergedBlobs.keys():
-            trackingBlob = mergedBlobs["blueball"][1]
+            trackingBlob = mergedBlobs["blueball"][0]
         else:
             continue
 
