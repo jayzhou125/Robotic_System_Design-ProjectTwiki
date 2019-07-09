@@ -48,7 +48,7 @@ def track_blobs():
                 if trackingBlob is not None:
                     break
                         
-        else:
+        if trackingBlob is None:
             continue
 
         center = rawBlobs.image_width//2    # the center of the image
