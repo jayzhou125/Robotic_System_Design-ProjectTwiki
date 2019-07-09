@@ -60,38 +60,64 @@ def zero():
     return result
 
 def mergeBlobs():
+    # try out the area param simple detection
     global rawBlobs
-    x = 0;
-    y = 0;
-    left = 0;
-    right = 0;
-    top = 0;
-    bottom = 0;
-    area = 0;
-    name = ""; # added AS
-    for b in rawBlobs.blobs:
-        x = x + (b.x * b.area)
-        y = y + (b.y * b.area)
-        left = left + (b.left * b.area)
-        right = right + (b.right * b.area)
-        top = top + (b.top * b.area)
-        bottom = bottom + (b.bottom * b.area)
-        area = area + b.area
-	name = b.name # added AS
+
     result = Blob()
 
-    if area > 0:
-        result.x = x / area
-        result.y = y / area
-        result.left = left / area
-        result.right = right / area
-        result.top = top / area
-        result.bottom = bottom / area
-        result.area = x * y
-	result.name = name # added AS; what gets assigned to trackingBlob
+    params = cv2.SimpleBlobDetector_Params()
+	# params.minThreshold = 0
+	# params.maxThreshold = 255
+	# params.filterByArea = True
+    params.minArea = 0.01 * rawBlobs.image_width * rawBlobs.image_height # tenth of the image size
+    params.maxArea = rawBlobs.image_width * rawBlobs.image_height
+	# params.filterByCircularity = True
+	# params.minCircularity = 0.1
+	# params.filterByConvexity = False
+	# params.minConvexity = 0.9
+	# params.filterByInertia = False
+	# params.minInertiaRatio = 0.5
+    ver = (cv2.__version__).split('.')
+    if int(ver[0]) < 3:
+        result = cv2.SimpleBlobDetector(params)
+    else:
+    	result = cv2.SimpleBlobDetector_create(params)
 
-    # print "blob merged center is + (", x, ", ", y, ")"
     return result
+
+
+#     global rawBlobs
+#     x = 0;
+#     y = 0;
+#     left = 0;
+#     right = 0;
+#     top = 0;
+#     bottom = 0;
+#     area = 0;
+#     name = ""; # added AS
+#     for b in rawBlobs.blobs:
+#         x = x + (b.x * b.area)
+#         y = y + (b.y * b.area)
+#         left = left + (b.left * b.area)
+#         right = right + (b.right * b.area)
+#         top = top + (b.top * b.area)
+#         bottom = bottom + (b.bottom * b.area)
+#         area = area + b.area
+# 	name = b.name # added AS
+#     result = Blob()
+
+#     if area > 0:
+#         result.x = x / area
+#         result.y = y / area
+#         result.left = left / area
+#         result.right = right / area
+#         result.top = top / area
+#         result.bottom = bottom / area
+#         result.area = x * y
+# 	result.name = name # added AS; what gets assigned to trackingBlob
+
+#     # print "blob merged center is + (", x, ", ", y, ")"
+#     return result
 
 def cleanUp():
     pub_stop.publish(Empty())
