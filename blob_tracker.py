@@ -12,7 +12,7 @@ pub_stop = rospy.Publisher("/emergency_stop", Empty, queue_size=10)     # publis
 
 # initialization
 rawBlobs = Blobs()
-mergedBlobs = Blobs()
+mergedBlobs = {}
 width = 0
 
 def init():
@@ -84,7 +84,7 @@ def zero():
 
 #     return result
 
-def advancedMergeBlobs():
+def mergeBlobs():
     global rawBlobs
 
     mergedBlobs = {}
