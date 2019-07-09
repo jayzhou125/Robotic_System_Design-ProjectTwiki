@@ -61,13 +61,13 @@ def zero():
 
 def mergeBlobs():
     global rawBlobs
-    x = 0;
-    y = 0;
-    left = 0;
-    right = 0;
-    top = 0;
-    bottom = 0;
-    area = 0;
+    x = 0
+    y = 0
+    left = 0
+    right = 0
+    top = 0
+    bottom = 0
+    area = 0
     name = ""; # added AS
     for b in rawBlobs.blobs:
         x = x + (b.x * b.area)
@@ -92,6 +92,58 @@ def mergeBlobs():
 
     # print "blob merged center is + (", x, ", ", y, ")"
     return result
+
+def advancedMergeBlobs():
+    global rawBlobs
+
+    mergedBlobs = {}
+
+    for b in rawBlobs.blobs:
+        mergeTarget = new Blob()
+        mergeNeeded = False
+        
+        #check to see if there is an existing blob to merge with
+        if b.name in mergedBlobs.keys: 
+            for m in mergedBlobs[b.name]:
+                if overlaps(b, m):
+                    mergeTarget = m
+                    mergeNeeded = True
+                    break
+        
+        else: # no blobs by that name
+            mergeBlobs[b.name] = []
+        
+        # merge
+        if not mergeNeeded:
+            mergeBlobs[b.name].append(b)
+        else: # merge needed
+            mergeTarget.left = min(mergeTarget.left, b.left)
+            mergeTarget.right = max(mergeTarget.right, b.right)
+            mergeTarget.top = min(mergeTarget.top, b.top)
+            mergeTarget.bottom = max(mergeTarget.bottom, b.bottom)
+            mergeTarget.area = (mergeTarget.right - mergeTarget.left) * (mergeTarget.bottom - mergeTarget.top)
+    
+    for array in mergeBlobs:
+        array.sort(key=lambda x: x.area, reverse=True)
+
+
+def overlaps(blob1, blob2):
+    h_over = False
+    v_over = True
+    if (blob1.left > blob2.left and blob2.left < blob2.right
+    or  blob1.right > blob2.left and blob1.right < blob2.right
+    or  blob2.left > blob1.left and blob2.left < blob1.right
+    or  blob2.right > blob1.left and blob2.right < blob1.right):
+        h_over = True
+    
+    if (blob1.top > blob2.top and blob2.top < blob2.bottom
+    or  blob1.bottom > blob2.top and blob1.bottom < blob2.bottom
+    or  blob2.top > blob1.top and blob2.top < blob1.bottom
+    or  blob2.bottom > blob1.top and blob2.bottom < blob1.bottom):
+        v_over = True
+
+    return h_over and v_over
+            
 
 def cleanUp():
     pub_stop.publish(Empty())

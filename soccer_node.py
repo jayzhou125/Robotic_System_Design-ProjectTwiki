@@ -5,6 +5,7 @@ from geometry_msgs.msg import Twist
 from batch_controller import execute, cancel
 from lines import Line
 from math import sqrt
+from soccer_scan import scan
 
 pub_command = rospy.Publisher("/kobuki_command", Twist, queue_size=10)
 pub_stop = rospy.Publisher("/emergency_stop", Empty, queue_size=10)
@@ -23,26 +24,33 @@ def soccer_node():
     y = 0
     theta = 0
 
+
     # scan from current position for ball and goal
-    goal_angle_1 = 0
-    ball_angle_1 = 0
+    ball_angle_1, goal_angle_1, direction = scan(pub_command)
 
     goal_vector_1 = Line(x=x, y=y, theta=goal_angle_1, useDegrees=True)
     ball_vector_1 = Line(x=x, y=y, theta=ball_angle_1, useDegrees=True)
+    
+
+    # turn to face 45 degrees past ball away from goal
+
+    target_angle = ball_angle_1 + direction*45
 
 
-    # decide where to move next
+    x, y, theta = location.currentLocation
+
+    move_angle = target_angle - theta
+    execute(0, move_angle, 0.6, reset=False)
 
     # move to new location
     move_dist = 0.5
-    execute(0.5, 0, 0.5, reset=False)
+    execute(move_dist, 0, 0.5, reset=False)
 
     # get new position
     x, y, theta = location.currentLocation
 
     # scan from current position for ball and goal
-    goal_angle_2 = 0
-    ball_angle_2 = 0
+    ball_angle_2, goal_angle_2, _ = scan(pub_command)
 
     goal_vector_2 = Line(x=x, y=y, theta=goal_angle_2, useDegrees=True)
     ball_vector_2 = Line(x=x, y=y, theta=ball_angle_2, useDegrees=True)
@@ -78,7 +86,7 @@ def soccer_node():
 
 
     # scan for ball(and goal)
-
+    ball_angle_fin, goal_angle_fin, _ = scan(pub_command)
 
     # make the shot
     execute(TARGET_OFFSET + 0.2,  0, 0.6, reset=True)
