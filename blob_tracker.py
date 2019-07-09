@@ -35,6 +35,19 @@ def track_blobs():
 
         if "blueball" in mergedBlobs.keys():
             trackingBlob = mergedBlobs["blueball"][0]
+        elif "pinkgoal" in mergedBlobs.keys() and "yellowgoal" in mergedBlobs.keys():
+            for outer in mergedBlobs["yellowgoal"]:
+                for inner in mergedBlobs["pinkgoal"]:
+                    if (inner.left > outer.left
+                    and inner.right < outer.right
+                    and inner.top > outer.top
+                    and inner.bottom < outer.bottom):
+                        trackingBlob = inner
+                        break
+                
+                if trackingBlob is not None:
+                    break
+                        
         else:
             continue
 
