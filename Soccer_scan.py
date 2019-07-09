@@ -1,10 +1,25 @@
 #!/usr/bin/python
 
 # This is a node for all the scan functions
+# 
+# Pseudocode:
+# circle 360 degrees
+#     when ball is seen (i.e., trackingBlob.name = "blueball"), record odometry
+#     when goal is seen, record odometry
+#     if ball is found first
+#         if goal < 180 
+#                turn right from ball
+#         if goal > 180 
+#                turn left from ball
+#     if goal is found first
+#         if ball < 180 
+#                turn left from ball
+#         if ball > 180 
+#                turn right from ball    
 # This node will return three value： 
 #     the angle which the ball is found, 
 #     the angle which the goal is found, 
-#     the direaction of the turn before the second scan.
+#     the direction of the turn before the second scan (-1 = right/clockwise; 1 = left; ccw)
 
 import rospy
 from std_msgs.msg import Empty
