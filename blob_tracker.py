@@ -38,7 +38,7 @@ def track_blobs():
         elif "pinkgoal" in mergedBlobs.keys() and "yellowgoal" in mergedBlobs.keys():
             for outer in mergedBlobs["yellowgoal"]:
                 for inner in mergedBlobs["pinkgoal"]:
-                    if ((inner.left >= outer.left
+                    if (inner.left >= outer.left
                     and inner.right <= outer.right
                     and inner.top >= outer.top
                     and inner.bottom <= outer.bottom):
