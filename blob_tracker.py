@@ -99,7 +99,7 @@ def mergeBlobs():
         mergeNeeded = False
         
         #check to see if there is an existing blob to merge with
-        if b.name in merged.keys: 
+        if b.name in merged.keys(): 
             for m in merged[b.name]:
                 if overlaps(b, m):
                     mergeTarget = m
