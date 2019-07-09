@@ -84,7 +84,7 @@ def zero():
 
 #     return result
 
-def advancedMergeBlobs():
+def mergeBlobs():
     global rawBlobs
 
     mergedBlobs = {}
