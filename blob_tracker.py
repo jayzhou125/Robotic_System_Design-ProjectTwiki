@@ -90,7 +90,7 @@ def advancedMergeBlobs():
     mergedBlobs = {}
 
     for b in rawBlobs.blobs:
-        mergeTarget = new Blob()
+        mergeTarget = Blob()
         mergeNeeded = False
         
         #check to see if there is an existing blob to merge with
