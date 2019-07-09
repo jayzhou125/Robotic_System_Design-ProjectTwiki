@@ -114,8 +114,8 @@ def mergeBlobs():
             mergeTarget.bottom = max(mergeTarget.bottom, b.bottom)
             mergeTarget.area = (mergeTarget.right - mergeTarget.left) * (mergeTarget.bottom - mergeTarget.top)
     
-    for array in mergeBlobs:
-        array.sort(key=lambda x: x.area, reverse=True)
+    for m in mergeBlobs:
+        m.sort(key=lambda x: x.area, reverse=True)
 
 
 def overlaps(blob1, blob2):
