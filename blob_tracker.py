@@ -31,7 +31,7 @@ def track_blobs():
         mergedBlobs = mergeBlobs()
         trackingBlob = None
 
-        if "blueball" in mergedBlobs.keys:
+        if "blueball" in mergedBlobs.keys():
             trackingBlob = mergedBlobs["blueball"][1]
         else:
             continue
@@ -121,6 +121,8 @@ def mergeBlobs():
     
     for m in merged:
         m.sort(key=lambda x: x.area, reverse=True)
+    
+    return m
 
 
 def overlaps(blob1, blob2):
