@@ -122,7 +122,7 @@ def mergeBlobs():
     for m in merged:
         m.sort(key=lambda x: x.area, reverse=True)
     
-    return m
+    return merged
 
 
 def overlaps(blob1, blob2):
