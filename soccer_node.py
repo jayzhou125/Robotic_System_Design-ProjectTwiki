@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import rospy
 import location
 from std_msgs.msg import Empty
