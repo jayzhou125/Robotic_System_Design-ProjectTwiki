@@ -1,15 +1,9 @@
-# initialization
+
+import location
 rawBlobs = Blobs()
 mergedBlobs = Blobs()
 width = 0
-ballNotFound = True
-goalNotFound = True
 
-def init():
-    rospy.init_node("blob_tracker")     # initialize the node
-    location.init()                     # init the location
-    rospy.on_shutdown(cleanUp)          
-    rospy.Subscriber("/blobs", Blobs, setRawBlobs)  # subscribe to blobs
 
 def turn_left(speed)
     command.angular.z = speed
@@ -26,73 +20,78 @@ def zero():
 # keep turning left until the ball and the goal is find
 def scan():
     global rawBlobs, pub_command
-    global ball_x, ball_y, ball_angle, goal_x, goal_y, goal_angle, ballNotFound, goalNotFound
-    ballNotFound = True
-    goalNotFound = True
     
-    Z_MAX = 0.3 # speed
-
-    # if the ball not found yet
-    while ballNotFound:
-        if "blueball" not in merge.keys():
-            turn_left(Z_MAX)
-        else 
-            ballNotFound = track_blobs()
-            if ballNotFound == False:
-                break
+    track_blobs("ball")
+    ball_angle = record_location()
     
-    while goalNotFoundZ:
-        if "yellowgoal" not in merge.keys():
-
-#     keep_turning(Z_MAX)
-
+    # record location
+    
+    track_blobs("goal")
+    goal_angle = record_location()
+    
     return ball_angle, goal_angle
 
-# track the bolb
-def track_blobs():
+def track_blobs(mode):
     global rawBlobs, pub_command, ballNotFound, goalNotFound
 
     Z_MAX = 0.5  # maximum speed
 
-#     while(True):
-    command = zero() 
-    trackingBlob = mergeBlobs()  # get the bolb to follow
-    center = rawBlobs.image_width//2    # the center of the image
-    centerOffset = center - trackingBlob.x  # the offset that the robot need to travel 
-    if trackingBlob.x == 0 and trackingBlob.y == 0:     # no bolb is found
-        continue
+    while(True):
+       
+        command = zero() 
+        mergedBlobs = mergeBlobs()
+        trackingBlob = None
 
-    speed = 4 * centerOffset/float(rawBlobs.image_width)    # calculate the right amount of speed for the command
+        print mergedBlobs.keys()
 
-    print "Tracking Blob Object Attr: ", trackingBlob.name, "<<" # added AS
+        if mode == "ball" and "blueball" in mergedBlobs.keys():
+            trackingBlob = mergedBlobs["blueball"][0]
+        elif mode == "goal" and "pinkgoal" in mergedBlobs.keys() and "yellowgoal" in mergedBlobs.keys():
+            for outer in mergedBlobs["yellowgoal"]:
+                for inner in mergedBlobs["pinkgoal"]:
+                    if (inner.left >= outer.left
+                    and inner.right <= outer.right
+                    and inner.top >= outer.top
+                    and inner.bottom <= outer.bottom):
+                        trackingBlob = inner
+                        break
+                
+                if trackingBlob is not None:
+                    break
+                        
+        if trackingBlob is None:
+            turn_left()
+            continue
 
-    if centerOffset > 20:   # if the offset is bigger than 20
-        command.angular.z = min(Z_MAX, speed) # turn left and follow 
-            # print([command.angular.z, centerOffset/rawBlobs.image_width])
-    elif centerOffset < -20:    # if the offset is smaller than -20
-        command.angular.z = max(-Z_MAX, speed)  # turn right and follow the ball
-            # print([command.angular.z, centerOffset/rawBlobs.image_width])
-    else centerOffset == 0:
-        ballNotFound = False
-        command = zero()
-        # stop the robot
-        pub_command.publish(command)    # publish the twist command to the kuboki nod
+        center = rawBlobs.image_width//2    # the center of the image
+        centerOffset = center - trackingBlob.x  # the offset that the ball need to travel 
         
-    pub_command.publish(command)    # publish the twist command to the kuboki node
-        
-    return ballNotFound
+        speed = 4 * centerOffset/float(rawBlobs.image_width)    # calculate the right amount of speed for the command
 
-def record_ball_location()
-    global pub_command, ballNotFound, ball_x, ball_y, ball_angle
-    command = zero()
-    ballNotFound = False
-    
+        print "Tracking Blob Object Attr: ", trackingBlob.name, "<<" # added AS
+
+        if centerOffset > 20:   # if the offset is bigger than 20
+            command.angular.z = min(Z_MAX, speed) # turn left and follow 
+            # print([command.angular.z, centerOffset/rawBlobs.image_width])
+        elif centerOffset < -20:    # if the offset is smaller than -20
+            command.angular.z = max(-Z_MAX, speed)  # turn right and follow the ball
+            # print([command.angular.z, centerOffset/rawBlobs.image_width])
+        else
+#             ballNotFound = False
+            command = zero()
+            # stop the robot
+            pub_command.publish(command)    # publish the twist command to the kuboki nod
+            return 
+        
+        pub_command.publish(command)    # publish the twist command to the kuboki node
+
+
+def record_location()
     # record odom
-    ball_x, ball_y, ball_angle = location.currentLocation
+    _, _, angle = location.currentLocation
+    return angle
     
-    
-    
-    return ball_angle
+
 
 # merge bolbs
 def mergeBlobs():
@@ -148,54 +147,4 @@ def overlaps(blob1, blob2):
 
     return h_over and v_over
 
-#             # record odom
-#             ball_x, ball_y, ball_angle = location.currentLocation
-#             # ball is now found, set to False
-#             ballNotFound = False
-#             command = zero()
-#             print "blueball found"
-#         if trackingBlob.name == "greenline":
-#             # record odom
-#             goal_x, goal_y, goal_angle = location.currentLocation
-#             # goal is now found, set to False
-#             goalNotFound = False
-#             command = zero()
-#             print "yellogoal found, area"
 
-        # # find_ball()
-        # # find_goal()
-        # # turn left
-        # command = zero() 
-        # # trackingBlob = mergeBlobs()  # get the bolb to follow
-        # center = rawBlobs.image_width//2    # the center of the image
-        # centerOffset = center - trackingBlob.x  # the offset that the ball need to travel 
-        # if trackingBlob.x == 0 and trackingBlob.y == 0:     # no bolb is found
-        #     continue
-
-        # speed = 4 * centerOffset/float(rawBlobs.image_width)    # calculate the right amount of speed for the command
-
-        # print "Tracking Blob Object Attr: ", trackingBlob.name, "<<" # added AS
-
-        # if centerOffset > 20:   # if the offset is bigger than 20
-        #     command.angular.z = min(Z_MAX, speed) # turn left and follow 
-        #     # print([command.angular.z, centerOffset/rawBlobs.image_width])
-        # elif centerOffset < -20:    # if the offset is smaller than -20
-        #     command.angular.z = max(-Z_MAX, speed)  # turn right and follow the ball
-        #     # print([command.angular.z, centerOffset/rawBlobs.image_width])
-
-        # pub_command.publish(command)    # publish the twist command to the kuboki node
-
-        # if trackingBlob.name == "blueball" and trackingBlob.area > 1000000000:
-        #     # record odom
-        #     ball_x, ball_y, ball_angle = location.currentLocation
-        #     # ball is now found, set to False
-        #     ballNotFound = False
-        #     print "blueball found, area", trackingBlob.area
-        # if trackingBlob.name == "greenline" and trackingBlob.area > 1000000000:
-        #     # record odom
-        #     goal_x, goal_y, goal_angle = location.currentLocation
-        #     # goal is now found, set to False
-        #     goalNotFound = False
-        #     print "yellogoal found, area", trackingBlob.area
-        #if not ballNotFound and not goalNotFound:
-         #   return ball_x, ball_y, ball_goal, goal_x, goal_y, goal_angle
