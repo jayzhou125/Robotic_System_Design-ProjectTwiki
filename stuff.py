@@ -34,7 +34,8 @@ def scan():
 
     # if the ball and the goal is not found yet
     while ballNotFound and goalNotFound:
-        if trackingBlob.name == "blueball":
+        keep_turning(Z_MAX)
+    if trackingBlob.name == "blueball":
             # record odom
             ball_x, ball_y, ball_angle = location.currentLocation
             # ball is now found, set to False
@@ -48,9 +49,6 @@ def scan():
             goalNotFound = False
             command = zero()
             print "yellogoal found, area"
-
-
-    keep_turning(Z_MAX)
 
     return 
 
