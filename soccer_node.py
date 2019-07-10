@@ -26,13 +26,22 @@ def soccer_node():
 
 
     # scan from current position for ball and goal
-    ball_angle_1, goal_angle_1, direction = scan(pub_command)
+    ball_angle_1, goal_angle_1 = scan(pub_command)
 
     goal_vector_1 = Line(x=x, y=y, theta=goal_angle_1, useDegrees=True)
     ball_vector_1 = Line(x=x, y=y, theta=ball_angle_1, useDegrees=True)
     
 
     # turn to face 45 degrees past ball away from goal
+    ball_angle_1 += 360 if ball_angle_1 < 0
+    goal_angle_1 += 360 if goal_angle_1 < 0
+
+    direction = 1
+
+    delta = goal_angle_1 - ball_angle_1
+    if delta < -180 or (delta > 0 and delta < 180):
+        direction = -1
+        
 
     target_angle = ball_angle_1 + direction*45
 
@@ -50,7 +59,7 @@ def soccer_node():
     x, y, theta = location.currentLocation
 
     # scan from current position for ball and goal
-    ball_angle_2, goal_angle_2, _ = scan(pub_command)
+    ball_angle_2, goal_angle_2 = scan(pub_command)
 
     goal_vector_2 = Line(x=x, y=y, theta=goal_angle_2, useDegrees=True)
     ball_vector_2 = Line(x=x, y=y, theta=ball_angle_2, useDegrees=True)
@@ -86,7 +95,7 @@ def soccer_node():
 
 
     # scan for ball(and goal)
-    ball_angle_fin, goal_angle_fin, _ = scan(pub_command)
+    ball_angle_fin, goal_angle_fin = scan(pub_command)
 
     # make the shot
     execute(TARGET_OFFSET + 0.2,  0, 0.6, reset=True)

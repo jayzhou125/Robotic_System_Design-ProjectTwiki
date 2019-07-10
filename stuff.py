@@ -41,7 +41,7 @@ def scan():
             ballNotFound = False
             command = zero()
             print "blueball found"
-        if trackingBlob.name == "greenline":
+        if trackingBlob.name == "yellowgoal":
             # record odom
             goal_x, goal_y, goal_angle = location.currentLocation
             # goal is now found, set to False
