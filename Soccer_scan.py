@@ -105,7 +105,6 @@ def track_blobs(mode):
             command.angular.z = max(-Z_MAX, speed)  # turn right and follow the ball
             # print([command.angular.z, centerOffset/rawBlobs.image_width])
         else
-#             ballNotFound = False
             command = zero()
             # stop the robot
             pub_command.publish(command)    # publish the twist command to the kuboki nod
