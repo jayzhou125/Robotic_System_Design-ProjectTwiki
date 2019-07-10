@@ -12,7 +12,7 @@ from soccer_scan import scan
 pub_command = rospy.Publisher("/kobuki_command", Twist, queue_size=10)
 pub_stop = rospy.Publisher("/emergency_stop", Empty, queue_size=10)
 
-def soccer_node():
+def soccer():
     global pub_command, pub_stop
     rospy.init_node("soccer_node")
     location.init()
@@ -110,3 +110,7 @@ def distance(x1, y1, x2, y2):
 def cleanUp():
     global pub_stop
     pub_stop.publish(Empty())
+
+
+if __name__ == "__main__":
+    soccer()
