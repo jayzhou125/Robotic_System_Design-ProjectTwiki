@@ -16,7 +16,7 @@ mergedBlobs = {}
 width = 0
 
 def init():
-    rospy.init_node("blob_tracker")     # initialize the node
+    rospy.init_node("test")     # initialize the node
     location.init()                     # init the location
     rospy.on_shutdown(cleanUp)          
     rospy.Subscriber("/blobs", Blobs, setRawBlobs)  # subscribe to blobs
@@ -34,7 +34,7 @@ def track_blobs():
         print mergedBlobs.keys()
 
         if "greenline" in mergedBlobs.keys():
-            trackingBlob = mergedBlobs["greenline"][0]
+            trackingBlob = mergedBlobs[""][0]
                         
         if trackingBlob is None:
             continue

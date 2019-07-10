@@ -35,8 +35,10 @@ def soccer():
     
 
     # turn to face 45 degrees past ball away from goal
-    ball_angle_1 += 360 if ball_angle_1 < 0
-    goal_angle_1 += 360 if goal_angle_1 < 0
+    if ball_angle_1 < 0:
+        ball_angle_1 += 360
+    if goal_angle_1 < 0:
+        goal_angle_1 += 360
 
     direction = 1
 
