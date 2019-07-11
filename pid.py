@@ -2,6 +2,8 @@ from datetime import datetime, timedelta
 
 class PID():
     def __init__(self, p, i, d):
+        
+        # p,i,d is constant
         self.p = p
         self.i = i
         self.d = d
