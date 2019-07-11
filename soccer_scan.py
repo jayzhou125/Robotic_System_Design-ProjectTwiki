@@ -11,11 +11,8 @@ import location
 rawBlobs = Blobs()
 mergedBlobs = Blobs()
 width = 0
+pub_command = None
 
-
-def turn_left(speed):
-    command.angular.z = speed
-    pub_command.publish(command)    # publish the twist command to the kuboki node
 
 # stop the robot
 def zero():
@@ -25,9 +22,19 @@ def zero():
 
     return result
 
+
+def turn_left(speed):
+    global pub_command
+    command = zero()
+    command.angular.z = speed
+    pub_command.publish(command)    # publish the twist command to the kuboki node
+
+
 # keep turning left until the ball and the goal is find
-def scan():
+def scan(publisher):
     global rawBlobs, pub_command
+
+    pub_command = publisher
     
     track_blobs("ball")
     ball_angle = record_location()
@@ -68,7 +75,7 @@ def track_blobs(mode):
                     break
                         
         if trackingBlob is None:
-            turn_left()
+            turn_left(Z_MAX)
             continue
 
         center = rawBlobs.image_width//2    # the center of the image

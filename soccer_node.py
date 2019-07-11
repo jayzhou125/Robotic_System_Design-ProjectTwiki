@@ -16,7 +16,7 @@ def soccer():
     global pub_command, pub_stop
     rospy.init_node("soccer_node")
     location.init()
-    rospy.on_shutdown(cleanUp())
+    rospy.on_shutdown(cleanUp)
 
     print "Connecting..."
     while pub_command.get_num_connections() == 0:
