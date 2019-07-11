@@ -25,10 +25,14 @@ def soccer():
     x = 0
     y = 0
     theta = 0
-
+    true_angle = 0
 
     # scan from current position for ball and goal
     ball_angle_1, goal_angle_1 = scan(pub_command)
+
+    execute(0, 1, 0.2, reset=False)
+
+    rospy.sleep(1)
 
     # turn to face 45 degrees past ball away from goal
     if ball_angle_1 < 0:
@@ -46,7 +50,6 @@ def soccer():
     target_angle = ball_angle_1 + direction*45
 
 
-    print [ball_angle_1, goal_angle_1, target_angle]
 
 
     print [x, y, goal_angle_1]
@@ -54,17 +57,26 @@ def soccer():
     ball_vector_1 = Line(x=x, y=y, theta=ball_angle_1, useDegrees=True)
     
 
-    x, y, theta = location.currentLocation
+    _, _, theta = location.currentLocation
 
     if theta < 0:
 	theta += 360
 
     move_angle = target_angle - theta
-    execute(0, move_angle, 0.6, reset=False)
+    
+    print [ball_angle_1, goal_angle_1, target_angle, theta, move_angle]
+    execute(0, move_angle, 0.6)
+    print "I have turned"
+    rospy.sleep(1)
 
     # move to new location
     move_dist = 0.2
-    execute(move_dist, 0, 0.5, reset=False)
+    execute(move_dist, 0, 0.5)
+
+    true_angle = move_angle
+
+    scan_2_vector = Line(x=0, y=0, theta=true_angle, useDegrees=True)
+    
 
     # get new position
     x, y, theta = location.currentLocation
@@ -92,7 +104,7 @@ def soccer():
     d_goal_target = distance(goal_x, goal_y, target_x, target_y)
 
     # if target pt is closer to goal than to ball or target is between goal and ball:
-    if d_goal_target < d_ball_target or d_goal_target < d_goal_ball:
+    if d_goal_target < d_ball_target or d_goal_target < d_ball_goal:
         target_x, target_y = approach_vector.findPointFrom(ball_x, ball_y, TARGET_OFFSET)
 
     # find way to move from current position to target pt
@@ -101,7 +113,7 @@ def soccer():
     angle = movement_vector.angle(useDegrees=True)
 
     # assumes theta == 0 after scan
-    execute(0, angle, 0.6, reset=False)
+    execute(0, angle, 0.6, reset=True)
     execute(dist, 0, 0.6, reset=False)
 
 
@@ -110,6 +122,8 @@ def soccer():
 
     # make the shot
     execute(TARGET_OFFSET + 0.2,  0, 0.6, reset=True)
+
+    file.close()
 
 def distance(x1, y1, x2, y2):
     return sqrt((x2-x1)**2 + (y2-y1)**2)
