@@ -41,6 +41,12 @@ def track_blobs():
         if trackingBlob is None:
             continue
 
+        # pid error (Proportional-Integral-Derivative (PID) Controller)
+        pid = PID()
+        pid.p = .01 # update values
+        pid.i = 0 # can leave this as zero
+        pid.d = 0 # update values
+        
         center = rawBlobs.image_width//2    # the center of the image
         centerOffset = center - trackingBlob.x  # the offset that the ball need to travel 
         
