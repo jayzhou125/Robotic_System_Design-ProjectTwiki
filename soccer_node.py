@@ -76,13 +76,18 @@ def soccer():
     true_angle = move_angle
 
     scan_2_vector = Line(x=0, y=0, theta=true_angle, useDegrees=True)
+    x, y = scan_2_vector.findPointFrom(0, 0, move_dist)
     
 
     # get new position
-    x, y, theta = location.currentLocation
+    _, _, theta = location.currentLocation
+
+    theta += true_angle
 
     # scan from current position for ball and goal
     ball_angle_2, goal_angle_2 = scan(pub_command)
+    ball_angle_2 += true_angle
+    goal_angle_2 += true_angle
 
     goal_vector_2 = Line(x=x, y=y, theta=goal_angle_2, useDegrees=True)
     ball_vector_2 = Line(x=x, y=y, theta=ball_angle_2, useDegrees=True)
@@ -105,7 +110,7 @@ def soccer():
 
     # if target pt is closer to goal than to ball or target is between goal and ball:
     if d_goal_target < d_ball_target or d_goal_target < d_ball_goal:
-        target_x, target_y = approach_vector.findPointFrom(ball_x, ball_y, TARGET_OFFSET)
+        target_x, target_y = approach_vector.findPointFrom(ball_x, ball_y, -TARGET_OFFSET)
 
     # find way to move from current position to target pt
     dist = distance(x, y, target_x, target_y)
@@ -114,7 +119,7 @@ def soccer():
 
     # assumes theta == 0 after scan
     execute(0, angle, 0.6, reset=True)
-    execute(dist, 0, 0.6, reset=False)
+    execute(dist, 0, 0.6, reset=True)
 
 
     # scan for ball(and goal)
@@ -123,7 +128,6 @@ def soccer():
     # make the shot
     execute(TARGET_OFFSET + 0.2,  0, 0.6, reset=True)
 
-    file.close()
 
 def distance(x1, y1, x2, y2):
     return sqrt((x2-x1)**2 + (y2-y1)**2)
