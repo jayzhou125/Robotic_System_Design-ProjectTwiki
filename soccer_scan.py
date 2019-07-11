@@ -9,10 +9,18 @@ from sensor_msgs.msg import Image
 import location
 
 rawBlobs = Blobs()
-mergedBlobs = Blobs()
+mergedBlobs = {}
 width = 0
 pub_command = None
 
+stop = False
+
+
+def setRawBlobs(blobs):
+    global rawBlobs
+    rawBlobs = blobs
+          
+rospy.Subscriber("/blobs", Blobs, setRawBlobs)  # subscribe to blobs
 
 # stop the robot
 def zero():
@@ -36,11 +44,13 @@ def scan(publisher):
 
     pub_command = publisher
     
+    turn_left(0.4)
     track_blobs("ball")
     ball_angle = record_location()
     
     # record location
     
+    turn_left(0.4)
     track_blobs("goal")
     goal_angle = record_location()
     
@@ -51,13 +61,13 @@ def track_blobs(mode):
 
     Z_MAX = 0.5  # maximum speed
 
-    while(True):
+    while not stop:
        
         command = zero() 
         mergedBlobs = mergeBlobs()
         trackingBlob = None
 
-        print mergedBlobs.keys()
+        # print mergedBlobs.keys()
 
         if mode == "ball" and "blueball" in mergedBlobs.keys():
             trackingBlob = mergedBlobs["blueball"][0]
@@ -75,7 +85,6 @@ def track_blobs(mode):
                     break
                         
         if trackingBlob is None:
-            turn_left(Z_MAX)
             continue
 
         center = rawBlobs.image_width//2    # the center of the image
@@ -83,15 +92,18 @@ def track_blobs(mode):
         
         speed = 4 * centerOffset/float(rawBlobs.image_width)    # calculate the right amount of speed for the command
 
-        print "Tracking Blob Object Attr: ", trackingBlob.name, "<<" # added AS
+        # print "Tracking Blob Object Attr: ", trackingBlob.name, "<<" # added AS
 
         if centerOffset > 20:   # if the offset is bigger than 20
+            # print "{} LEFT".format(mode)
             command.angular.z = min(Z_MAX, speed) # turn left and follow 
             # print([command.angular.z, centerOffset/rawBlobs.image_width])
         elif centerOffset < -20:    # if the offset is smaller than -20
+            # print "{} RIGHT".format(mode)
             command.angular.z = max(-Z_MAX, speed)  # turn right and follow the ball
             # print([command.angular.z, centerOffset/rawBlobs.image_width])
         else:
+            # print "{} CENTERED".format(mode)
             command = zero()
             # stop the robot
             pub_command.publish(command)    # publish the twist command to the kuboki nod

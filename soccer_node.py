@@ -7,7 +7,7 @@ from geometry_msgs.msg import Twist
 from batch_controller import execute, cancel
 from lines import Line
 from math import sqrt
-from soccer_scan import scan
+from soccer_scan import scan, stop
 
 pub_command = rospy.Publisher("/kobuki_command", Twist, queue_size=10)
 pub_stop = rospy.Publisher("/emergency_stop", Empty, queue_size=10)
@@ -30,10 +30,6 @@ def soccer():
     # scan from current position for ball and goal
     ball_angle_1, goal_angle_1 = scan(pub_command)
 
-    goal_vector_1 = Line(x=x, y=y, theta=goal_angle_1, useDegrees=True)
-    ball_vector_1 = Line(x=x, y=y, theta=ball_angle_1, useDegrees=True)
-    
-
     # turn to face 45 degrees past ball away from goal
     if ball_angle_1 < 0:
         ball_angle_1 += 360
@@ -50,13 +46,24 @@ def soccer():
     target_angle = ball_angle_1 + direction*45
 
 
+    print [ball_angle_1, goal_angle_1, target_angle]
+
+
+    print [x, y, goal_angle_1]
+    goal_vector_1 = Line(x=x, y=y, theta=goal_angle_1, useDegrees=True)
+    ball_vector_1 = Line(x=x, y=y, theta=ball_angle_1, useDegrees=True)
+    
+
     x, y, theta = location.currentLocation
+
+    if theta < 0:
+	theta += 360
 
     move_angle = target_angle - theta
     execute(0, move_angle, 0.6, reset=False)
 
     # move to new location
-    move_dist = 0.5
+    move_dist = 0.2
     execute(move_dist, 0, 0.5, reset=False)
 
     # get new position
@@ -111,6 +118,7 @@ def distance(x1, y1, x2, y2):
 
 def cleanUp():
     global pub_stop
+    stop = True
     pub_stop.publish(Empty())
 
 

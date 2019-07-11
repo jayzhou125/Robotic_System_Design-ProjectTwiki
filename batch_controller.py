@@ -65,7 +65,7 @@ def _line(distance, speed):
     command.linear.x = 0.05 * sign
 
     while command.linear.x != 0 and not cancel:
-        print cancel
+        # print cancel
         x, y, theta = location.currentLocation
         cutoff = distance - (sign * (command.linear.x*2) ** 2) # temporary cutoff calculation
         if x >= cutoff and sign > 0: 	 	# if travelled to the cutoff point
@@ -85,7 +85,7 @@ def _line(distance, speed):
         if (command.linear.x < 0 and sign > 0) or (command.linear.x < 0 and sign > 0):
             command.linear.x = 0
 
-	print x, cutoff, command.linear.x	# print check
+	# print x, cutoff, command.linear.x	# print check
 	command.angular.z = 0			# make sure it is not turning 
         pub_command.publish(command)		# publish the command
         rospy.sleep(SLEEP)			
@@ -143,7 +143,7 @@ def _turn(degrees, speed):
         if (command.angular.z < 0 and sign > 0) or (command.angular.z < 0 and sign > 0):	
             command.angular.z = 0
         
-	print theta, theta_total, cutoff, command.angular.z		# print to check the data
+	# print theta, theta_total, cutoff, command.angular.z		# print to check the data
 	command.linear.x = 0						# make sure the
         pub_command.publish(command)
         rospy.sleep(SLEEP)
@@ -188,7 +188,7 @@ def _arc(length, radius, speed):
     theta_prev = 0
     theta_total = 0
     
-    print sign, turn_sign
+    # print sign, turn_sign
     while command.linear.x != 0 and not cancel:
         x, y, theta = location.currentLocation
         
@@ -220,7 +220,7 @@ def _arc(length, radius, speed):
             command.linear.x = 0
 
         pub_command.publish(command)
-        print theta_total, command.linear.x, command.angular.z	
+        # print theta_total, command.linear.x, command.angular.z	
         rospy.sleep(SLEEP)
     
     pub_command.publish(zero())

@@ -1,4 +1,4 @@
-from math import sin, cos, tan, atan, radians
+from math import sin, cos, tan, atan, radians, degrees
 
 class Line():
     def __init__(self, **kwargs):
@@ -10,7 +10,8 @@ class Line():
         theta = kwargs["theta"] if "theta" in kwargs.keys() else kwargs["angle"] if "angle" in kwargs.keys() else None
         useRadians = kwargs["useRadians"] is not False if "useRadians" in kwargs.keys() else not kwargs["useDegrees"] is not False if "useDegrees" in kwargs.keys() else True
 
-        if x1 and y1 and x2 and y2:
+        if x1 is not None and y1 is not None and x2 is not None and y2 is not None:
+            print "Two Points"
             dy = y1 - y2
             dx = x1 - x2
             
@@ -19,13 +20,18 @@ class Line():
             
             m = dy/dx
         
-        elif x1 and y1 and theta:
+        elif x1 is not None and y1 is not None and theta:
+            print "Point Angle"
+	    print theta, tan(theta), tan(radians(theta)), useRadians
             if useRadians:
                 m = tan(theta)
+		print "radians to {}".format(m)
             else:
                 m = tan(radians(theta))
+                print "degrees to {}".format(m)
 
-        elif x1 and y1 and m:
+        elif x1 is not None and y1 is not None and m:
+            print "Point Slope"
             pass
         else:
             ValueError("Unrecognized argument list: {0}\nValid argument sets are:\n\t\
@@ -35,6 +41,9 @@ class Line():
         
         self.point = (x1, y1)
         self.slope = m
+
+	if m is None:
+            raise ValueError("No Slope")
 
             
 
@@ -77,6 +86,7 @@ class Line():
 if __name__ == "__main__":
     line1 = Line(x=0, y=0, m=1)
     line2 = Line(x=3, y=1, x2=3, y2=10)
+    line3 = Line(x=0, y=0, theta=179.28, useDegrees=True)
     print(line1.intersect(line2))
     print(line2.intersect(line1))
 
