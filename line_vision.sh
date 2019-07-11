@@ -12,4 +12,4 @@ gnome-terminal --tab --title="cmvision_launch" -e "bash -c 'roslaunch mypackage 
 
 gnome-terminal --tab --title="blob_tracker" -e "bash -c 'rosrun mypackage tracking_line.py';bash"
 
-gnome-terminal --tab --title="constant_command" -e "bash -c 'rosrun mypackage constant_command.py'"
+gnome-terminal --tab --title="constant_command" -e "bash -c 'rosrun mypackage constant_command.py -r'"
