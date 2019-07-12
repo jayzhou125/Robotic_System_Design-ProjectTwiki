@@ -127,7 +127,7 @@ def soccer():
     print ["kick", target_x, target_y]
     
     file.write("{} {}\n".format(alt_x, alt_y))
-    print["kick_alt", alt_x, alt_y)
+    print["kick_alt", alt_x, alt_y]
 
     d_ball_target = distance(ball_x, ball_y, target_x, target_y)
     d_ball_goal = distance(ball_x, ball_y, goal_x, goal_y)

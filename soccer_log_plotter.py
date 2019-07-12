@@ -16,8 +16,6 @@ for entry in log.readlines():
     x.append(float(a))
     y.append(float(b))
 
-x.append(x[2] * 2 - x[4])
-y.append(y[2] * 2 - y[4])
 plt.scatter(x, y, color=colors)
 log.close()
 plt.show()
