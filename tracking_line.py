@@ -54,13 +54,15 @@ def track_blobs():
         
         speed = 4 * centerOffset/float(rawBlobs.image_width)    # calculate the right amount of speed for the command
 
-        print "Tracking Blob Object Attr: ", trackingBlob.name, "<<" # added AS
+        # print "Tracking Blob Object Attr: ", trackingBlob.name, "<<" # added AS
 
         if centerOffset > 20:   # if the offset is bigger than 20
-            command.angular.z = min(Z_MAX, speed) # turn left and follow 
+            command.angular.z = pid.correction(centerOffset)
+            # command.angular.z = min(Z_MAX, speed) # turn left and follow 
             # print([command.angular.z, centerOffset/rawBlobs.image_width])
         elif centerOffset < -20:    # if the offset is smaller than -20
-            command.angular.z = max(-Z_MAX, speed)  # turn right and follow the ball
+            command.angular.z = pid.correction(centerOffset)
+            # command.angular.z = max(-Z_MAX, speed)  # turn right and follow the ball
             # print([command.angular.z, centerOffset/rawBlobs.image_width])
         
         pub_command.publish(command)    # publish the twist command to the kuboki node
