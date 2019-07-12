@@ -50,6 +50,8 @@ def track_blobs():
         center = rawBlobs.image_width//2    # the center of the image
         centerOffset = center - trackingBlob.x  # the offset that the ball need to travel 
         
+        pid.correction(centerOffset) # added
+        
         speed = 4 * centerOffset/float(rawBlobs.image_width)    # calculate the right amount of speed for the command
 
         print "Tracking Blob Object Attr: ", trackingBlob.name, "<<" # added AS
