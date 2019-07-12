@@ -140,7 +140,7 @@ def mergeBlobs():
     
     for m in merged.keys():
         merged[m].sort(key=lambda x: x.area, reverse=True)
-        m[:] = [i for i in m if i.area > MIN_AREA]
+        merged[m][:] = [i for i in merged[m] if i.area > MIN_AREA]
     
     return merged
 
