@@ -111,6 +111,7 @@ def mergeBlobs():
     global rawBlobs
 
     merged = {}
+    MIN_AREA = 40
 
     for b in rawBlobs.blobs:
         mergeTarget = Blob()
@@ -139,6 +140,7 @@ def mergeBlobs():
     
     for m in merged.keys():
         merged[m].sort(key=lambda x: x.area, reverse=True)
+        m[:] = [i for i in m where i.area > MIN_AREA]
     
     return merged
 
