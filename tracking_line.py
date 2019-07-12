@@ -18,7 +18,7 @@ width = 0
 
 def init():
     rospy.init_node("tracking_line")     # initialize the node
-    location.init()                     # init the location
+    location.init()                      # init the location
     rospy.on_shutdown(cleanUp)          
     rospy.Subscriber("/blobs", Blobs, setRawBlobs)  # subscribe to blobs
 
@@ -29,7 +29,7 @@ def track_blobs():
 
     while(True):
         command = zero()
-        command.linear.x = 0.2
+        command.linear.x = 0.4 # update values
         mergedBlobs = mergeBlobs()
         trackingBlob = None
 
@@ -41,18 +41,30 @@ def track_blobs():
         if trackingBlob is None:
             continue
 
+        # pid error (Proportional-Integral-Derivative (PID) Controller)
+        p = .01 # update values
+        i = 0 # can leave this as zero
+        d = 0 # update values
+        controller = pid.PID(p, i, d)
+        controller.start()
+        
         center = rawBlobs.image_width//2    # the center of the image
         centerOffset = center - trackingBlob.x  # the offset that the ball need to travel 
         
+        cor = controller.correction(centerOffset) # added, right angular speed you want
+        
         speed = 4 * centerOffset/float(rawBlobs.image_width)    # calculate the right amount of speed for the command
 
-        print "Tracking Blob Object Attr: ", trackingBlob.name, "<<" # added AS
-
-        if centerOffset > 20:   # if the offset is bigger than 20
-            command.angular.z = min(Z_MAX, speed) # turn left and follow 
+        # print "Tracking Blob Object Attr: ", trackingBlob.name, "<<" # added AS
+        
+        command.angular.z = cor
+        
+        # if centerOffset > 20:   # if the offset is bigger than 20
+            # command.angular.z = corr
             # print([command.angular.z, centerOffset/rawBlobs.image_width])
-        elif centerOffset < -20:    # if the offset is smaller than -20
-            command.angular.z = max(-Z_MAX, speed)  # turn right and follow the ball
+        # elif centerOffset < -20:    # if the offset is smaller than -20
+            # command.angular.z = corr
+            # command.angular.z = max(-Z_MAX, speed)  # turn right and follow the ball
             # print([command.angular.z, centerOffset/rawBlobs.image_width])
         
         pub_command.publish(command)    # publish the twist command to the kuboki node
