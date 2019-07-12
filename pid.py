@@ -10,7 +10,7 @@ class PID():
         self.err = 0
         self.integral = 0 # integral(e) is rolling sum of e * dt
 
-    def start():
+    def start(self):
         self.timestamp = datetime.now()
     
     def correction(self, error):
