@@ -13,7 +13,7 @@ class PID():
     def start():
         self.timestamp = datetime.now()
     
-    def correction(error):
+    def correction(self, error):
         time = datetime.now()
         delta = (time - self.timestamp).total_seconds()
         self.timestamp = time
