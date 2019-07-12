@@ -45,12 +45,12 @@ def track_blobs():
         p = .01 # update values
         i = 0 # can leave this as zero
         d = 0 # update values
-        pid = pid.PID(p, i, d)
+        controller = pid.PID(p, i, d)
         
         center = rawBlobs.image_width//2    # the center of the image
         centerOffset = center - trackingBlob.x  # the offset that the ball need to travel 
         
-        correction = pid.correction(centerOffset) # added, right angular speed you want
+        correction = controller.correction(centerOffset) # added, right angular speed you want
         
         speed = 4 * centerOffset/float(rawBlobs.image_width)    # calculate the right amount of speed for the command
 
