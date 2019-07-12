@@ -18,7 +18,7 @@ width = 0
 
 def init():
     rospy.init_node("tracking_line")     # initialize the node
-    location.init()                     # init the location
+    location.init()                      # init the location
     rospy.on_shutdown(cleanUp)          
     rospy.Subscriber("/blobs", Blobs, setRawBlobs)  # subscribe to blobs
 
@@ -42,10 +42,10 @@ def track_blobs():
             continue
 
         # pid error (Proportional-Integral-Derivative (PID) Controller)
-        pid = PID()
-        pid.p = .01 # update values
-        pid.i = 0 # can leave this as zero
-        pid.d = 0 # update values
+        p = .01 # update values
+        i = 0 # can leave this as zero
+        d = 0 # update values
+        pid = PID(p, i, d)
         
         center = rawBlobs.image_width//2    # the center of the image
         centerOffset = center - trackingBlob.x  # the offset that the ball need to travel 
