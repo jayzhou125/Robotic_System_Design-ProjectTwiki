@@ -18,6 +18,8 @@ def soccer():
     location.init()
     rospy.on_shutdown(cleanUp)
 
+    file = open("soccer.log", "w")
+
     print "Connecting..."
     while pub_command.get_num_connections() == 0:
         pass
@@ -26,6 +28,8 @@ def soccer():
     y = 0
     theta = 0
     true_angle = 0
+
+    file.write("{} {}".format(x, y))
 
     # scan from current position for ball and goal
     ball_angle_1, goal_angle_1 = scan(pub_command)
@@ -79,6 +83,8 @@ def soccer():
     x, y = scan_2_vector.findPointFrom(0, 0, move_dist)
     
 
+    file.write("{} {}\n".format(x, y))
+
     # get new position
     _, _, theta = location.currentLocation
 
@@ -96,6 +102,10 @@ def soccer():
     goal_x, goal_y = goal_vector_1.intersect(goal_vector_2)
     ball_x, ball_y = ball_vector_1.intersect(ball_vector_2)
 
+
+    file.write("{} {}\n".format(goal_x, goal_y))
+    file.write("{} {}\n".format(ball_x, ball_y))
+
     # find line for hitting the ball
     approach_vector = Line(x1=goal_x, y1=goal_y, x2=ball_x, y2=ball_y)
 
@@ -103,6 +113,9 @@ def soccer():
     TARGET_OFFSET = 0.5
     # select point on approach vector for robot to start
     target_x, target_y = approach_vector.findPointFrom(ball_x, ball_y, TARGET_OFFSET)
+
+
+    file.write("{} {}\n".format(target_x, target_y))
 
     d_ball_target = distance(ball_x, ball_y, target_x, target_y)
     d_ball_goal = distance(ball_x, ball_y, goal_x, goal_y)
