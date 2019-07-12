@@ -57,7 +57,7 @@ def track_blobs():
 
         # print "Tracking Blob Object Attr: ", trackingBlob.name, "<<" # added AS
         
-        command.angular.z = corr
+        command.angular.z = cor
         
         # if centerOffset > 20:   # if the offset is bigger than 20
             # command.angular.z = corr
