@@ -21,7 +21,7 @@ class PID():
         self.integral += (delta * error)
 
         # correction = Kp * e(t)        + Ki * integral(e)      + Kd * de/dt
-        correction = (self.p * error) + (self.i * self.integral) + (self.d * (error - self.e)/delta)
+        correction = (self.p * error) + (self.i * self.integral) + (self.d * (error - self.err)/delta)
 
         self.err = error
 
