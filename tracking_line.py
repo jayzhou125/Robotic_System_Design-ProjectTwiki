@@ -29,7 +29,7 @@ def track_blobs():
 
     while(True):
         command = zero()
-        command.linear.x = 0.2
+        command.linear.x = 0.4 # update values
         mergedBlobs = mergeBlobs()
         trackingBlob = None
 
