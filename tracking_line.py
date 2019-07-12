@@ -50,17 +50,19 @@ def track_blobs():
         center = rawBlobs.image_width//2    # the center of the image
         centerOffset = center - trackingBlob.x  # the offset that the ball need to travel 
         
-        correction = controller.correction(centerOffset) # added, right angular speed you want
+        cor = controller.correction(centerOffset) # added, right angular speed you want
         
         speed = 4 * centerOffset/float(rawBlobs.image_width)    # calculate the right amount of speed for the command
 
         # print "Tracking Blob Object Attr: ", trackingBlob.name, "<<" # added AS
-
-        if centerOffset > 20:   # if the offset is bigger than 20
-            command.angular.z = min(Z_MAX, correction)
+        
+        command.angular.z = corr
+        
+        # if centerOffset > 20:   # if the offset is bigger than 20
+            # command.angular.z = corr
             # print([command.angular.z, centerOffset/rawBlobs.image_width])
-        elif centerOffset < -20:    # if the offset is smaller than -20
-            command.angular.z = max(Z_MAX, correction)
+        # elif centerOffset < -20:    # if the offset is smaller than -20
+            # command.angular.z = corr
             # command.angular.z = max(-Z_MAX, speed)  # turn right and follow the ball
             # print([command.angular.z, centerOffset/rawBlobs.image_width])
         
