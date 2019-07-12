@@ -46,6 +46,7 @@ def track_blobs():
         i = 0 # can leave this as zero
         d = 0 # update values
         controller = pid.PID(p, i, d)
+        controller.start()
         
         center = rawBlobs.image_width//2    # the center of the image
         centerOffset = center - trackingBlob.x  # the offset that the ball need to travel 
