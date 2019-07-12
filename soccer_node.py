@@ -29,7 +29,8 @@ def soccer():
     theta = 0
     true_angle = 0
 
-    file.write("{} {}".format(x, y))
+    file.write("{} {}\n".format(x, y))
+    print ["start", x, y]
 
     # scan from current position for ball and goal
     ball_angle_1, goal_angle_1 = scan(pub_command)
@@ -85,6 +86,8 @@ def soccer():
 
     file.write("{} {}\n".format(x, y))
 
+    print ["scan_2", x, y]
+
     # get new position
     _, _, theta = location.currentLocation
 
@@ -103,35 +106,45 @@ def soccer():
     ball_x, ball_y = ball_vector_1.intersect(ball_vector_2)
 
 
-    file.write("{} {}\n".format(goal_x, goal_y))
     file.write("{} {}\n".format(ball_x, ball_y))
+    file.write("{} {}\n".format(goal_x, goal_y))
 
-    # find line for hitting the ball
+    print ["ball", ball_x, ball_y]
+    print ["goal", goal_x, goal_y]
+
+    # find line from ball to goal
     approach_vector = Line(x1=goal_x, y1=goal_y, x2=ball_x, y2=ball_y)
 
 
     TARGET_OFFSET = 0.5
     # select point on approach vector for robot to start
     target_x, target_y = approach_vector.findPointFrom(ball_x, ball_y, TARGET_OFFSET)
+    alt_x = ball_x * 2 - target_x
+    alt_y = ball_y * 2 - target_y
 
 
     file.write("{} {}\n".format(target_x, target_y))
+    print ["kick", target_x, target_y]
+    
+    file.write("{} {}\n".format(alt_x, alt_y))
+    print["kick_alt", alt_x, alt_y)
 
     d_ball_target = distance(ball_x, ball_y, target_x, target_y)
     d_ball_goal = distance(ball_x, ball_y, goal_x, goal_y)
     d_goal_target = distance(goal_x, goal_y, target_x, target_y)
+    d_goal_alt = distance(goal_x, goal_y, alt_x, alt_y)
+    
+    if d_goal_alt > d_goal_target:
+        target_x = alt_x
+        target_y = alt_y
 
-    # if target pt is closer to goal than to ball or target is between goal and ball:
-    if d_goal_target < d_ball_target or d_goal_target < d_ball_goal:
-        target_x, target_y = approach_vector.findPointFrom(ball_x, ball_y, -TARGET_OFFSET)
 
     # find way to move from current position to target pt
     dist = distance(x, y, target_x, target_y)
     movement_vector = Line(x=x, y=y, x2=target_x, y2=target_y)
-    angle = movement_vector.angle(useDegrees=True)
+    angle = movement_vector.angle(useDegrees=True)    
 
-    # assumes theta == 0 after scan
-    execute(0, angle, 0.6, reset=True)
+    execute(0, angle - theta, 0.6, reset=True)
     execute(dist, 0, 0.6, reset=True)
 
 

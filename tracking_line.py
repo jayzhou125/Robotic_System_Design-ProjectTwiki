@@ -29,11 +29,11 @@ def track_blobs():
 
     while(True):
         command = zero()
-        command.linear.x = 0.4 # update values
+        command.linear.x = 0.4 # update values; .7 = too fast
         mergedBlobs = mergeBlobs()
         trackingBlob = None
 
-        print mergedBlobs.keys()
+       # print mergedBlobs.keys()
 
         if "greenline" in mergedBlobs.keys():
             trackingBlob = mergedBlobs["greenline"][0]
@@ -44,7 +44,7 @@ def track_blobs():
         # pid error (Proportional-Integral-Derivative (PID) Controller)
         p = .01 # update values
         i = 0 # can leave this as zero
-        d = 0 # update values
+        d = 1e-8  # update values; .5 = crazy turn
         controller = pid.PID(p, i, d)
         controller.start()
         
@@ -53,7 +53,7 @@ def track_blobs():
         
         cor = controller.correction(centerOffset) # added, right angular speed you want
         
-        speed = 4 * centerOffset/float(rawBlobs.image_width)    # calculate the right amount of speed for the command
+	print cor
 
         # print "Tracking Blob Object Attr: ", trackingBlob.name, "<<" # added AS
         
@@ -69,6 +69,7 @@ def track_blobs():
         
         pub_command.publish(command)    # publish the twist command to the kuboki node
 
+	rospy.sleep(0.0001)
 def setRawBlobs(blobs):
     global rawBlobs
     rawBlobs = blobs
