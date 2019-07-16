@@ -27,6 +27,8 @@ def track_blobs():
 
     Z_MAX = 0.4  # maximum speed
 
+    zero_count = 0
+
     while(True):
         command = zero()
         command.linear.x = 0.4 # update values; .7 = too fast
@@ -40,7 +42,13 @@ def track_blobs():
                         
         if trackingBlob is None:
             command = zero()
-	    continue
+            if zero_count < 20:
+                zero_count += 1
+            else:
+                continue
+        
+        zero_count = 0
+
 
         # pid error (Proportional-Integral-Derivative (PID) Controller)
         p = 0.009 # update values
