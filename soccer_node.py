@@ -57,7 +57,8 @@ def soccer():
 
 
 
-    print [x, y, goal_angle_1]
+    print "--- SCAN 1 RESULTS ---"
+    print "x: {} y: {},  goal @ {}, ball @ {}".format(x, y, goal_angle_1, ball_angle_1)
     goal_vector_1 = Line(x=x, y=y, theta=goal_angle_1, useDegrees=True)
     ball_vector_1 = Line(x=x, y=y, theta=ball_angle_1, useDegrees=True)
     
@@ -69,16 +70,18 @@ def soccer():
 
     move_angle = target_angle - theta
     
-    print [ball_angle_1, goal_angle_1, target_angle, theta, move_angle]
     execute(0, move_angle, 0.6)
-    print "I have turned"
     rospy.sleep(1)
 
     # move to new location
     move_dist = 0.2
     execute(move_dist, 0, 0.5)
 
-    true_angle = move_angle
+
+    print "--- REALIGNING FOR SCAN 2 ---"
+    print "odom @ {}, angle from scan 1 start @ {}".format(location.currentLocation[2], target_angle)
+
+    true_angle = target_angle
 
     scan_2_vector = Line(x=0, y=0, theta=true_angle, useDegrees=True)
     x, y = scan_2_vector.findPointFrom(0, 0, move_dist)
@@ -104,6 +107,13 @@ def soccer():
     # calculate intersections
     goal_x, goal_y = goal_vector_1.intersect(goal_vector_2)
     ball_x, ball_y = ball_vector_1.intersect(ball_vector_2)
+
+    print "--- SCAN 2 RESULTS ---"
+    print "x: {}, y: {},  goal @ {}, ball @ {}".format(x, y, goal_angle_2, ball_angle_2)
+    print "--- GOAL LOCATION ---"
+    print "x: {}, y: {}".format(goal_x, goal_y)
+    print "--- BALL LOCATION ---"
+    print "x: {}, y: {}".format(ball_x, ball_y)
 
 
     file.write("{} {}\n".format(ball_x, ball_y))
@@ -141,14 +151,19 @@ def soccer():
     else:
         print "--- FIRST TARGET SELECTED ---"
 
+    print "x: {}, y: {}".format(target_x, target_y)
+
 
     # find way to move from current position to target pt
     dist = distance(x, y, target_x, target_y)
     movement_vector = Line(x=x, y=y, x2=target_x, y2=target_y)
-    angle = movement_vector.angle(useDegrees=True)    
+    angle = movement_vector.angle(useDegrees=True)
 
     execute(0, angle - theta, 0.6, reset=True)
     execute(dist, 0, 0.6, reset=True)
+
+    print "--- REALIGNING FOR SHOT ---"
+    print "odom @ {}, angle from scan 2 start @ {}, angle from scan 1 start @ {}".format(location.currentLocation[2], angle, angle + true_angle)
 
 
     # scan for ball(and goal)
