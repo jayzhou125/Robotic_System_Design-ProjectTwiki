@@ -158,8 +158,12 @@ def soccer():
     dist = distance(x, y, target_x, target_y)
     movement_vector = Line(x=x, y=y, x2=target_x, y2=target_y)
     angle = movement_vector.angle(useDegrees=True)
+
     print "--- APPROACHING SHOT LOCATION ---"
     print "angle to shot location @ {}".format(angle)
+
+    _, _, theta = location.currentLocation
+    theta += true_angle
     execute(0, angle - theta, 0.6, reset=True)
     execute(dist, 0, 0.6, reset=True)
 
