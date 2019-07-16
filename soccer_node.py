@@ -161,6 +161,7 @@ def soccer():
     movement_vector = Line(x=x, y=y, x2=target_x, y2=target_y)
     angle = movement_vector.angle(useDegrees=True)
 
+    # check if the angle is correct or opposite of correct
     tx, ty = movement_vector.findPointFrom(x, y, dist)
 
     if abs(tx - target_x) > 0.0001 or abs(ty - target_y) > 0.0001:
