@@ -25,7 +25,7 @@ def init():
 def track_blobs():
     global rawBlobs, pub_command
 
-    Z_MAX = 0.5  # maximum speed
+    Z_MAX = 0.4  # maximum speed
 
     while(True):
         command = zero()
@@ -42,9 +42,9 @@ def track_blobs():
             continue
 
         # pid error (Proportional-Integral-Derivative (PID) Controller)
-        p = .01 # update values
-        i = 0 # can leave this as zero
-        d = 1e-8  # update values; .5 = crazy turn
+        p = 0.009 # update values
+        i = 0.005 # can leave this as zero
+        d = 0  # update values; .5 = crazy turn
         controller = pid.PID(p, i, d)
         controller.start()
         

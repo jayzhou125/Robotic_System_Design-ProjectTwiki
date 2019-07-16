@@ -71,7 +71,7 @@ def track_blobs(mode):
 
         if mode == "ball" and "blueball" in mergedBlobs.keys() and len(mergedBlobs["blueball"]) > 0:
             trackingBlob = mergedBlobs["blueball"][0]
-        elif mode == "goal" and "pinkgoal" in mergedBlobs.keys() and "yellowgoal" in mergedBlobs.keys() and len(mergedBlobs["yellowball"]) > 0 and len(mergedBlobs["pinkgoal"]) > 0:
+        elif mode == "goal" and "pinkgoal" in mergedBlobs.keys() and "yellowgoal" in mergedBlobs.keys() and len(mergedBlobs["yellowgoal"]) > 0 and len(mergedBlobs["pinkgoal"]) > 0:
             for outer in mergedBlobs["yellowgoal"]:
                 for inner in mergedBlobs["pinkgoal"]:
                     if (inner.left >= outer.left
@@ -94,11 +94,11 @@ def track_blobs(mode):
 
         # print "Tracking Blob Object Attr: ", trackingBlob.name, "<<" # added AS
 
-        if centerOffset > 20:   # if the offset is bigger than 20
+        if centerOffset > 30:   # if the offset is bigger than 20
             # print "{} LEFT".format(mode)
             command.angular.z = min(Z_MAX, speed) # turn left and follow 
             # print([command.angular.z, centerOffset/rawBlobs.image_width])
-        elif centerOffset < -20:    # if the offset is smaller than -20
+        elif centerOffset < -30:    # if the offset is smaller than -20
             # print "{} RIGHT".format(mode)
             command.angular.z = max(-Z_MAX, speed)  # turn right and follow the ball
             # print([command.angular.z, centerOffset/rawBlobs.image_width])
