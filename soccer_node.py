@@ -135,8 +135,11 @@ def soccer():
     d_goal_alt = distance(goal_x, goal_y, alt_x, alt_y)
     
     if d_goal_alt > d_goal_target:
+        print "--- ALT SELECTED ---"
         target_x = alt_x
         target_y = alt_y
+    else:
+        print "--- FIRST TARGET SELECTED ---"
 
 
     # find way to move from current position to target pt

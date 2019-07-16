@@ -11,7 +11,7 @@ class Line():
         useRadians = kwargs["useRadians"] is not False if "useRadians" in kwargs.keys() else not kwargs["useDegrees"] is not False if "useDegrees" in kwargs.keys() else True
 
         if x1 is not None and y1 is not None and x2 is not None and y2 is not None:
-            print "Two Points"
+            # print "Two Points"
             dy = y1 - y2
             dx = x1 - x2
             
@@ -21,17 +21,17 @@ class Line():
             m = dy/dx
         
         elif x1 is not None and y1 is not None and theta:
-            print "Point Angle"
-	    print theta, tan(theta), tan(radians(theta)), useRadians
+            # print "Point Angle"
+	        # print theta, tan(theta), tan(radians(theta)), useRadians
             if useRadians:
                 m = tan(theta)
-		print "radians to {}".format(m)
+		    # print "radians to {}".format(m)
             else:
                 m = tan(radians(theta))
-                print "degrees to {}".format(m)
+                # print "degrees to {}".format(m)
 
         elif x1 is not None and y1 is not None and m:
-            print "Point Slope"
+            # print "Point Slope"
             pass
         else:
             ValueError("Unrecognized argument list: {0}\nValid argument sets are:\n\t\
@@ -58,7 +58,7 @@ class Line():
         y = m1 * (x - x1) + y1
         y_alt = m2 * (x - x2) + y2
 
-        print("Slopes: {0} and {1}".format(m1, m2))
+        # print("Slopes: {0} and {1}".format(m1, m2))
         if m1 > 1e10 and m2 < 1e10:
             y = y_alt
             y_alt = y
