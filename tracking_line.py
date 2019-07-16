@@ -45,7 +45,8 @@ def track_blobs():
             if zero_count < 20:
                 zero_count += 1
             else:
-                continue
+                print "no line"
+            continue
         
         zero_count = 0
 
