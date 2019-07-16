@@ -31,7 +31,7 @@ def track_blobs():
 
     while(True):
         command = zero()
-        command.linear.x = 0.4 # update values; .7 = too fast
+        command.linear.x = 0.35 # update values; .7 = too fast
         mergedBlobs = mergeBlobs()
         trackingBlob = None
 
@@ -41,12 +41,11 @@ def track_blobs():
             trackingBlob = mergedBlobs["greenline"][0]
                         
         if trackingBlob is None:
-            command = zero()
-            if zero_count < 20:
+            if zero_count < 1000:
                 zero_count += 1
             else:
                 print "no line"
-            pub_command.publish(command)
+                pub_command.publish(zero())
             continue
         
         zero_count = 0
@@ -55,7 +54,7 @@ def track_blobs():
         # pid error (Proportional-Integral-Derivative (PID) Controller)
         p = 0.009 # update values
         i = 0 # can leave this as zero
-        d = 0  # update values; .5 = crazy turn
+        d = 0 # update values; .5 = crazy turn
         controller = pid.PID(p, i, d)
         controller.start()
         
@@ -80,7 +79,7 @@ def track_blobs():
         
         pub_command.publish(command)    # publish the twist command to the kuboki node
 
-	rospy.sleep(0.0001)
+	rospy.sleep(0.001)
 def setRawBlobs(blobs):
     global rawBlobs
     rawBlobs = blobs
