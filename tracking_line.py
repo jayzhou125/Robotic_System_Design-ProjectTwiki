@@ -39,7 +39,7 @@ def track_blobs():
             trackingBlob = mergedBlobs["greenline"][0]
                         
         if trackingBlob is None:
-            continue
+            command = zero()
 
         # pid error (Proportional-Integral-Derivative (PID) Controller)
         p = 0.009 # update values
