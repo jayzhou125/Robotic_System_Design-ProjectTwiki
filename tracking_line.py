@@ -43,7 +43,7 @@ def track_blobs():
 
         # pid error (Proportional-Integral-Derivative (PID) Controller)
         p = 0.009 # update values
-        i = 0.005 # can leave this as zero
+        i = 0 # can leave this as zero
         d = 0  # update values; .5 = crazy turn
         controller = pid.PID(p, i, d)
         controller.start()
