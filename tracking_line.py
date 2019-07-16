@@ -40,6 +40,7 @@ def track_blobs():
                         
         if trackingBlob is None:
             command = zero()
+	    continue
 
         # pid error (Proportional-Integral-Derivative (PID) Controller)
         p = 0.009 # update values
