@@ -35,7 +35,7 @@ def track_blobs():
 
        # print mergedBlobs.keys()
 
-        if "greenline" in mergedBlobs.keys():
+        if "greenline" in mergedBlobs.keys() and len(mergedBlobs["greenline"]) > 0:
             trackingBlob = mergedBlobs["greenline"][0]
                         
         if trackingBlob is None:
@@ -202,3 +202,4 @@ def cleanUp():
 if __name__ == "__main__":
     init()
     track_blobs()
+

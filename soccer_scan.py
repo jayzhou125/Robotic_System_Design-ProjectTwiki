@@ -69,9 +69,9 @@ def track_blobs(mode):
 
         # print mergedBlobs.keys()
 
-        if mode == "ball" and "blueball" in mergedBlobs.keys():
+        if mode == "ball" and "blueball" in mergedBlobs.keys() and len(mergedBlobs["blueball"]) > 0:
             trackingBlob = mergedBlobs["blueball"][0]
-        elif mode == "goal" and "pinkgoal" in mergedBlobs.keys() and "yellowgoal" in mergedBlobs.keys():
+        elif mode == "goal" and "pinkgoal" in mergedBlobs.keys() and "yellowgoal" in mergedBlobs.keys() and len(mergedBlobs["yellowball"]) > 0 and len(mergedBlobs["pinkgoal"]) > 0:
             for outer in mergedBlobs["yellowgoal"]:
                 for inner in mergedBlobs["pinkgoal"]:
                     if (inner.left >= outer.left
