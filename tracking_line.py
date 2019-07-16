@@ -46,6 +46,7 @@ def track_blobs():
                 zero_count += 1
             else:
                 print "no line"
+            pub_command.publish(command)
             continue
         
         zero_count = 0
