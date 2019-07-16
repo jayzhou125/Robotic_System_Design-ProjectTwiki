@@ -12,8 +12,10 @@ from soccer_scan import scan, stop
 pub_command = rospy.Publisher("/kobuki_command", Twist, queue_size=10)
 pub_stop = rospy.Publisher("/emergency_stop", Empty, queue_size=10)
 
+TARGET_OFFSET = None
+
 def soccer():
-    global pub_command, pub_stop
+    global pub_command, pub_stop, TARGET_OFFSET
     rospy.init_node("soccer_node")
     location.init()
     rospy.on_shutdown(cleanUp)
@@ -159,6 +161,12 @@ def soccer():
     movement_vector = Line(x=x, y=y, x2=target_x, y2=target_y)
     angle = movement_vector.angle(useDegrees=True)
 
+    tx, ty = movement_vector.findPointFrom(x, y, dist)
+
+    if abs(tx - target_x) > 0.0001 or abs(ty - target_y) > 0.0001:
+        print "--- USING ALTERNATE ANGLE ---"
+        angle += 180
+
     print "--- APPROACHING SHOT LOCATION ---"
     print "angle to shot location @ {}".format(angle)
 
@@ -174,12 +182,28 @@ def soccer():
     # scan for ball(and goal)
     ball_angle_fin, goal_angle_fin = scan(pub_command)
 
+    # create background thread to stop robot once ball is hit
+    from threading import Thread
+
+    stop_thread = Thread(target=stopper)
+    stop_thread.start()
+
     # make the shot
-    execute(TARGET_OFFSET + 0.2,  0, 0.6, reset=True)
+    execute(TARGET_OFFSET + 2,  0, 1, reset=True)
+    
+    stop_thread.join()
+    file.close()
 
 
 def distance(x1, y1, x2, y2):
     return sqrt((x2-x1)**2 + (y2-y1)**2)
+
+    
+def stopper():
+    global pub_stop, TARGET_OFFSET
+    while(location.currentLocation[0] < TARGET_OFFSET + 0.1):
+        rospy.sleep(0.001)
+    pub_stop.publish(Empty())
 
 
 
