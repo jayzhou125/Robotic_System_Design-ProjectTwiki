@@ -161,12 +161,16 @@ def soccer():
     movement_vector = Line(x=x, y=y, x2=target_x, y2=target_y)
     angle = movement_vector.angle(useDegrees=True)
 
-    # check if the angle is correct or opposite of correct
-    tx, ty = movement_vector.findPointFrom(x, y, dist)
+    if angle < 0:
+        angle += 360
 
-    if abs(tx - target_x) > 0.0001 or abs(ty - target_y) > 0.0001:
+    # check if the angle is correct or opposite of correct
+    if ball_angle_2 > goal_angle_2:
         print "--- USING ALTERNATE ANGLE ---"
-        angle += 180
+        if angle < ball_angle_2:
+            angle += 180
+        if angle > ball_angle_2 + 180:
+            angle -= 180
 
     print "--- APPROACHING SHOT LOCATION ---"
     print "angle to shot location @ {}".format(angle)
