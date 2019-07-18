@@ -94,11 +94,11 @@ def track_blobs(mode):
 
         # print "Tracking Blob Object Attr: ", trackingBlob.name, "<<" # added AS
 
-        if centerOffset > 30:   # if the offset is bigger than 20
+        if centerOffset > 35:   # if the offset is bigger than 20
             # print "{} LEFT".format(mode)
             command.angular.z = min(Z_MAX, speed) # turn left and follow 
             # print([command.angular.z, centerOffset/rawBlobs.image_width])
-        elif centerOffset < -30:    # if the offset is smaller than -20
+        elif centerOffset < -35:    # if the offset is smaller than -20
             # print "{} RIGHT".format(mode)
             command.angular.z = max(-Z_MAX, speed)  # turn right and follow the ball
             # print([command.angular.z, centerOffset/rawBlobs.image_width])
