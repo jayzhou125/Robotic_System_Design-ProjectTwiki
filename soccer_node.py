@@ -167,9 +167,9 @@ def soccer():
     # check if the angle is correct or opposite of correct
     if ball_angle_2 > goal_angle_2:
         print "--- USING ALTERNATE ANGLE ---"
-        if angle < ball_angle_2:
+        if angle < ball_angle_2 and angle > ball_angle_2 - 180:
             angle += 180
-        if angle > ball_angle_2 + 180:
+        elif angle > ball_angle_2 + 180 and angle < ball_angle_2 + 360:
             angle -= 180
 
     print "--- APPROACHING SHOT LOCATION ---"
@@ -178,7 +178,7 @@ def soccer():
     _, _, theta = location.currentLocation
     theta += true_angle
     execute(0, angle - theta, 0.6, reset=True)
-    execute(dist, 0, 0.6, reset=True)
+    execute(dist + 0.1, 0, 0.6, reset=True)
 
     print "--- REALIGNING FOR SHOT ---"
     print "odom @ {}, angle from scan 2 start @ {}, angle from scan 1 start @ {}".format(location.currentLocation[2], angle, angle + true_angle)
@@ -206,7 +206,7 @@ def distance(x1, y1, x2, y2):
     
 def stopper():
     global pub_stop, TARGET_OFFSET
-    while(location.currentLocation[0] < TARGET_OFFSET + 0.1):
+    while(location.currentLocation[0] < TARGET_OFFSET + 0.05):
         rospy.sleep(0.001)
     pub_stop.publish(Empty())
 

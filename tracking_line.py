@@ -23,13 +23,15 @@ def init():
     rospy.Subscriber("/blobs", Blobs, setRawBlobs)  # subscribe to blobs
 
 def track_blobs():
-    global rawBlobs, pub_command
+    global rawBlobs, pub_command, pub_stop
 
     Z_MAX = 0.4  # maximum speed
 
     zero_count = 0
 
     while(True):
+	rospy.sleep(0.001)
+
         command = zero()
         command.linear.x = 0.35 # update values; .7 = too fast
         mergedBlobs = mergeBlobs()
@@ -43,9 +45,9 @@ def track_blobs():
         if trackingBlob is None:
             if zero_count < 1000:
                 zero_count += 1
+		print zero_count
             else:
-                print "no line"
-                pub_command.publish(zero())
+		pub_stop.publish(Empty())
             continue
         
         zero_count = 0
@@ -63,7 +65,7 @@ def track_blobs():
         
         cor = controller.correction(centerOffset) # added, right angular speed you want
         
-	print cor
+	# print cor
 
         # print "Tracking Blob Object Attr: ", trackingBlob.name, "<<" # added AS
         
@@ -79,7 +81,6 @@ def track_blobs():
         
         pub_command.publish(command)    # publish the twist command to the kuboki node
 
-	rospy.sleep(0.001)
 def setRawBlobs(blobs):
     global rawBlobs
     rawBlobs = blobs
