@@ -13,10 +13,12 @@ pub_command = rospy.Publisher("/kobuki_command", Twist, queue_size=10)
 pub_stop = rospy.Publisher("/emergency_stop", Empty, queue_size=10)
 
 TARGET_OFFSET = None
+file = None
 
 def soccer():
-    global pub_command, pub_stop, TARGET_OFFSET
+    global pub_command, pub_stop, TARGET_OFFSET, file
     rospy.init_node("soccer_node")
+    rospy.Subscriber("/emergency_stop", Empty, closer)
     location.init()
     rospy.on_shutdown(cleanUp)
 
@@ -36,8 +38,6 @@ def soccer():
 
     # scan from current position for ball and goal
     ball_angle_1, goal_angle_1 = scan(pub_command)
-
-    execute(0, 1, 0.2, reset=False)
 
     rospy.sleep(1)
 
@@ -76,7 +76,7 @@ def soccer():
     rospy.sleep(1)
 
     # move to new location
-    move_dist = 0.2
+    move_dist = 0.3
     execute(move_dist, 0, 0.5)
 
 
@@ -167,9 +167,9 @@ def soccer():
     # check if the angle is correct or opposite of correct
     if ball_angle_2 > goal_angle_2:
         print "--- USING ALTERNATE ANGLE ---"
-        if angle < ball_angle_2 and angle > ball_angle_2 - 180:
+        if angle < ball_angle_2:
             angle += 180
-        elif angle > ball_angle_2 + 180 and angle < ball_angle_2 + 360:
+        if angle > ball_angle_2 + 180:
             angle -= 180
 
     print "--- APPROACHING SHOT LOCATION ---"
@@ -198,6 +198,7 @@ def soccer():
     
     stop_thread.join()
     file.close()
+    file = None
 
 
 def distance(x1, y1, x2, y2):
@@ -206,11 +207,14 @@ def distance(x1, y1, x2, y2):
     
 def stopper():
     global pub_stop, TARGET_OFFSET
-    while(location.currentLocation[0] < TARGET_OFFSET + 0.05):
+    while(location.currentLocation[0] < TARGET_OFFSET + 0.1):
         rospy.sleep(0.001)
     pub_stop.publish(Empty())
 
-
+def closer(data):
+    global file
+    if file is not None:
+        file.close()
 
 def cleanUp():
     global pub_stop
