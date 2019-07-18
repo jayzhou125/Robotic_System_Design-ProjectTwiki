@@ -178,7 +178,7 @@ def soccer():
     _, _, theta = location.currentLocation
     theta += true_angle
     execute(0, angle - theta, 0.6, reset=True)
-    execute(dist + 0.1, 0, 0.6, reset=True)
+    execute(dist, 0, 0.6, reset=True)
 
     print "--- REALIGNING FOR SHOT ---"
     print "odom @ {}, angle from scan 2 start @ {}, angle from scan 1 start @ {}".format(location.currentLocation[2], angle, angle + true_angle)
