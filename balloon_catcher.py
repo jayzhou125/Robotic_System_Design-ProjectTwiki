@@ -9,7 +9,7 @@ from cmvision.msg import Blobs, Blob
 from sensor_msgs.msg import Image
 from batch_controller import execute, cancel
 from rightTriangle import *
-from struct import unpack
+from struct import pack, unpack
 from balloon_tracking_test import scan
 
 
@@ -27,7 +27,7 @@ depth_map = Image()
 # get the angle of kinect
 def angleCallback(data):
 	global kinect_angle
-	kinect_angle = data
+	kinect_angle = data.data
 
 def depthCallback(data):
 	global depth_map
@@ -35,9 +35,10 @@ def depthCallback(data):
 
 def getDepth(x, y):
 	global depth_map
+	data = depth_map.data
 	offset = (depth_map.step * y) + (4 * x)
-	dist, _ = unpack('f', depth_map[offset] + depth_map[offset+1] + depth_map[offset+2] + depth_map[offset+3])
-	return dist
+	dist = unpack('f', depth_map.data[offset] + depth_map.data[offset+1] + depth_map.data[offset+2] + depth_map.data[offset+3])
+	return dist[0]
 
 def cleanUp():
 	global pub_stop
@@ -52,7 +53,7 @@ def catcher():
 	rospy.on_shutdown(cleanUp)
 
 	# get the balloon in the center of the screen(ball_tracker)
-	trackingBlob = scan()
+	targetBlob = scan(pub_command)
 	
 	KINECT_ANGLE_PER_PIXEL = 10
 	
@@ -70,4 +71,5 @@ def catcher():
 	# move the calculated distance 
 
 
-
+if __name__ == "__main__":
+	catcher()

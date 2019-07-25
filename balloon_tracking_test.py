@@ -42,7 +42,7 @@ def scan(publisher):
     global rawBlobs, pub_command
     pub_command = publisher
     
-   # turn_left(0.4)
+#    turn_left(0.4)
     
     return track_blobs("balloon") # image coordinates for center of the blob
 
@@ -68,7 +68,7 @@ def track_blobs(mode):
         center = rawBlobs.image_width//2    # the center of the image
         centerOffset = center - trackingBlob.x  # the offset that the ball need to travel 
         
-        speed = 4 * centerOffset/float(rawBlobs.image_width)    # calculate the right amount of speed for the command
+        speed = 16 * centerOffset/float(rawBlobs.image_width)    # calculate the right amount of speed for the command
 
         # print "Tracking Blob Object Attr: ", trackingBlob.name, "<<" # added AS
 
