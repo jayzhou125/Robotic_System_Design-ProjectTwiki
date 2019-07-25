@@ -16,4 +16,4 @@ gnome-terminal --tab --title="constant_command" -e "bash -c 'rosrun mypackage co
 
 sleep 5s
 
-gnome-terminal --tab --title="soccer_node" -e "bash -c 'rosrun mypackage balloon_catcher.py';bash"
+gnome-terminal --tab --title="balloon_catcher_node" -e "bash -c 'rosrun mypackage balloon_catcher.py';bash"
