@@ -30,11 +30,11 @@ def zero():
     return result
 
 
-def turn_left(speed):
-    global pub_command
-    command = zero()
-    command.angular.z = speed
-    pub_command.publish(command)    # publish the twist command to the kuboki node
+# def turn_left(speed):
+#     global pub_command
+#     command = zero()
+#     command.angular.z = speed
+#     pub_command.publish(command)    # publish the twist command to the kuboki node
 
 
 # keep turning left until the balloon is found
