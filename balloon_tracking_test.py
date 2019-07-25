@@ -1,12 +1,12 @@
 #!/usr/bin/python
 
-
 import rospy
 from std_msgs.msg import Empty
 from geometry_msgs.msg import Twist
 from cmvision.msg import Blobs, Blob
 from sensor_msgs.msg import Image
 import location
+import pid
 
 rawBlobs = Blobs()
 mergedBlobs = {}
@@ -14,7 +14,6 @@ width = 0
 pub_command = None
 
 stop = False
-
 
 def setRawBlobs(blobs):
     global rawBlobs
@@ -38,26 +37,17 @@ def turn_left(speed):
     pub_command.publish(command)    # publish the twist command to the kuboki node
 
 
-# keep turning left until the ball and the goal is find
+# keep turning left until the balloon is found
 def scan(publisher):
     global rawBlobs, pub_command
-
     pub_command = publisher
     
-    turn_left(0.4)
-    track_blobs("ball")
-    ball_angle = record_location()
+   # turn_left(0.4)
     
-    # record location
-    
-    turn_left(0.4)
-    track_blobs("goal")
-    goal_angle = record_location()
-    
-    return ball_angle, goal_angle
+    return track_blobs("balloon") # image coordinates for center of the blob
 
 def track_blobs(mode):
-    global rawBlobs, pub_command, ballNotFound, goalNotFound
+    global rawBlobs, pub_command, ballNotFound
 
     Z_MAX = 0.5  # maximum speed
 
@@ -69,20 +59,8 @@ def track_blobs(mode):
 
         # print mergedBlobs.keys()
 
-        if mode == "ball" and "blueball" in mergedBlobs.keys() and len(mergedBlobs["blueball"]) > 0:
-            trackingBlob = mergedBlobs["blueball"][0]
-        elif mode == "goal" and "pinkgoal" in mergedBlobs.keys() and "yellowgoal" in mergedBlobs.keys() and len(mergedBlobs["yellowgoal"]) > 0 and len(mergedBlobs["pinkgoal"]) > 0:
-            for outer in mergedBlobs["yellowgoal"]:
-                for inner in mergedBlobs["pinkgoal"]:
-                    if (inner.left > outer.left
-                    and inner.right < outer.right
-                    and inner.top > outer.top
-                    and inner.bottom < outer.bottom):
-                        trackingBlob = inner
-                        break
-                
-                if trackingBlob is not None:
-                    break
+        if "orangeballoon" in mergedBlobs.keys() and len(mergedBlobs["orangeballoon"]) > 0:
+            trackingBlob = mergedBlobs["orangeballoon"][0]
                         
         if trackingBlob is None:
             continue
@@ -94,11 +72,11 @@ def track_blobs(mode):
 
         # print "Tracking Blob Object Attr: ", trackingBlob.name, "<<" # added AS
 
-        if centerOffset > 35:   # if the offset is bigger than 20
+        if centerOffset > 20:   # if the offset is bigger than 20
             # print "{} LEFT".format(mode)
             command.angular.z = min(Z_MAX, speed) # turn left and follow 
             # print([command.angular.z, centerOffset/rawBlobs.image_width])
-        elif centerOffset < -35:    # if the offset is smaller than -20
+        elif centerOffset < -20:    # if the offset is smaller than -20
             # print "{} RIGHT".format(mode)
             command.angular.z = max(-Z_MAX, speed)  # turn right and follow the ball
             # print([command.angular.z, centerOffset/rawBlobs.image_width])
@@ -107,11 +85,10 @@ def track_blobs(mode):
             command = zero()
             # stop the robot
             pub_command.publish(command)    # publish the twist command to the kuboki nod
-            return 
+            return trackingBlob
         
         pub_command.publish(command)    # publish the twist command to the kuboki node
-
-
+       
 def record_location():
     # record odom
     _, _, angle = location.currentLocation
@@ -119,7 +96,7 @@ def record_location():
     
 
 
-# merge bolbs
+# merge blobs
 def mergeBlobs():
     global rawBlobs
 
