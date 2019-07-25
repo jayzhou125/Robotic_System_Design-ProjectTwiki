@@ -10,6 +10,7 @@ from sensor_msgs.msg import Image
 from batch_controller import execute, cancel
 from rightTriangle import *
 from struct import unpack
+from balloon_tracking_test import scan
 
 
 pub_command = rospy.Publisher("/kobuki_command", Twist, queue_size=10)  # publish command
@@ -51,6 +52,7 @@ def catcher():
 	rospy.on_shutdown(cleanUp)
 
 	# get the balloon in the center of the screen(ball_tracker)
+	trackingBlob = scan()
 	
 	KINECT_ANGLE_PER_PIXEL = 10
 	
@@ -61,6 +63,9 @@ def catcher():
 	dist = getDepth(targetBlob.x, targetBlob.y)
 	vertical = getOpposite(angle, dist)
 	horizontal = getAdjacent(angle, dist)
+
+	print "balloon detected {} meters from camera".format(dist)
+	print "height {} meters, estimated landing point {} meters".format(vertical, horizontal)
 
 	# move the calculated distance 
 
