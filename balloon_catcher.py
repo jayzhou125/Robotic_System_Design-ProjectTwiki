@@ -79,7 +79,7 @@ def catcher():
 	# move the calculated distance 
 	# we could use batch command's execute but the trick will be the ball won't be in the center all the time when it falls
 	# so we might need to use the tracking blob with a higher sensitivity.
-	excute(horizontal, 0, 0.6)
+	execute(horizontal, 0, 0.6)
 # 	track_blobs()
 	
 # def track_blobs():
