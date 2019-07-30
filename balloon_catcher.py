@@ -92,14 +92,14 @@ def track_blobs():
 	rospy.sleep(0.001)
 
         command = zero()
-        command.linear.x = 0.35 # update values; .7 = too fast
+        command.linear.x = Z_MAX #0.35 # update values; .7 = too fast
         mergedBlobs = mergeBlobs()
         trackingBlob = None
 
        # print mergedBlobs.keys()
 
-        if "greenline" in mergedBlobs.keys() and len(mergedBlobs["greenline"]) > 0:
-            trackingBlob = mergedBlobs["greenline"][0]
+        if "orangeballoon" in mergedBlobs.keys() and len(mergedBlobs["orangeballoon"]) > 0:
+            trackingBlob = mergedBlobs["orangeballoon"][0]
                         
         if trackingBlob is None:
             if zero_count < 1000:
