@@ -54,20 +54,11 @@ def track_blobs(mode):
     while not stop:
        
         command = zero() 
-        mergedBlobs = mergeBlobs()
-        trackingBlob = None
-
-        # print mergedBlobs.keys()
-
-        if "orangeballoon" in mergedBlobs.keys() and len(mergedBlobs["orangeballoon"]) > 0:
-            trackingBlob = mergedBlobs["orangeballoon"][0]
-                        
-        if trackingBlob is None:
+        
+        centerOffset, trackingBlob = get_blob_offset()
+        if centerOffset is None:
             continue
 
-        center = rawBlobs.image_width//2    # the center of the image
-        centerOffset = center - trackingBlob.x  # the offset that the ball need to travel 
-        
         speed = 16 * centerOffset/float(rawBlobs.image_width)    # calculate the right amount of speed for the command
 
         # print "Tracking Blob Object Attr: ", trackingBlob.name, "<<" # added AS
@@ -84,11 +75,29 @@ def track_blobs(mode):
             # print "{} CENTERED".format(mode)
             command = zero()
             # stop the robot
-            pub_command.publish(command)    # publish the twist command to the kuboki nod
+            pub_command.publish(command)    # publish the twist command to the kuboki node
             return trackingBlob
         
         pub_command.publish(command)    # publish the twist command to the kuboki node
        
+
+def get_blob_offset():
+    global rawBlobs, ballNotFound
+
+    mergedBlobs = mergeBlobs()
+    trackingBlob = None
+    # print mergedBlobs.keys()
+
+    if "orangeballoon" in mergedBlobs.keys() and len(mergedBlobs["orangeballoon"]) > 0:
+        trackingBlob = mergedBlobs["orangeballoon"][0]
+                    
+    if trackingBlob is None:
+        return None, None
+
+    center = rawBlobs.image_width//2    # the center of the image
+    centerOffset = center - trackingBlob.x  # the offset that the ball need to travel 
+    return centerOffset, trackingBlob
+
 def record_location():
     # record odom
     _, _, angle = location.currentLocation

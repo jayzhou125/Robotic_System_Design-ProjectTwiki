@@ -5,7 +5,7 @@ import location
 import math
 
 SLEEP = 0.01
-DELTA_X = 0.65*SLEEP 	# was 0.5
+DELTA_X = 0.9*SLEEP 	# was 0.5
 DELTA_Z = 1.3*SLEEP	# was 1
 command = None
 cancel = False
@@ -37,9 +37,8 @@ kill = rospy.Subscriber("/kill", Empty, terminate)
 
 
 # execite the commands base of the speeds and commands given
-def execute(linear, angular, speed, reset=True):
-    if reset:
-        location.resetOdom()
+def execute(linear, angular, speed):
+    location.resetOdom()
     rospy.sleep(0.1)
 
 
