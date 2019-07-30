@@ -43,6 +43,14 @@ def getDepth(x, y):
 def cleanUp():
 	global pub_stop
 	pub_stop.publish(Empty())
+	
+# stop the robot
+def zero():
+    result = Twist();
+    result.angular.z = 0
+    result.linear.x = 0
+
+    return result
 
 def catcher():
 	global pub_stop, pub_command, kinect_angle
@@ -69,7 +77,115 @@ def catcher():
 	print "height {} meters, estimated landing point {} meters".format(vertical, horizontal)
 
 	# move the calculated distance 
+	# we could use batch command's execute but the trick will be the ball won't be in the center all the time when it falls
+	# so we might need to use the tracking blob with a higher sensitivity.
+	track_blobs()
+	
+def track_blobs():
+    global rawBlobs, pub_command, pub_stop
 
+    Z_MAX = 0.8  # maximum speed
+
+    zero_count = 0
+
+    while(True):
+	rospy.sleep(0.001)
+
+        command = zero()
+        command.linear.x = 0.35 # update values; .7 = too fast
+        mergedBlobs = mergeBlobs()
+        trackingBlob = None
+
+       # print mergedBlobs.keys()
+
+        if "greenline" in mergedBlobs.keys() and len(mergedBlobs["greenline"]) > 0:
+            trackingBlob = mergedBlobs["greenline"][0]
+                        
+        if trackingBlob is None:
+            if zero_count < 1000:
+                zero_count += 1
+		print zero_count
+            else:
+		pub_stop.publish(Empty())
+            continue
+        
+        zero_count = 0
+
+
+        # pid error (Proportional-Integral-Derivative (PID) Controller)
+        p = 0.009 # update values
+        i = 0 # can leave this as zero
+        d = 0 # update values; .5 = crazy turn
+        controller = pid.PID(p, i, d)
+        controller.start()
+        
+        center = rawBlobs.image_width//2    # the center of the image
+        centerOffset = center - trackingBlob.x  # the offset that the ball need to travel 
+        
+        cor = controller.correction(centerOffset) # added, right angular speed you want
+        
+	# print cor
+
+        # print "Tracking Blob Object Attr: ", trackingBlob.name, "<<" # added AS
+        
+        command.angular.z = cor
+        
+        pub_command.publish(command)    # publish the twist command to the kuboki node
+
+def mergeBlobs():
+    global rawBlobs
+
+    merged = {}
+    MIN_AREA = 40
+
+    for b in rawBlobs.blobs:
+        mergeTarget = Blob()
+        mergeNeeded = False
+        
+        #check to see if there is an existing blob to merge with
+        if b.name in merged.keys(): 
+            for m in merged[b.name]:
+                if overlaps(b, m):
+                    mergeTarget = m
+                    mergeNeeded = True
+                    break
+        
+        else: # no blobs by that name
+            merged[b.name] = []
+        
+        # merge
+        if not mergeNeeded:
+            merged[b.name].append(b)
+        else: # merge needed
+            mergeTarget.left = min(mergeTarget.left, b.left)
+            mergeTarget.right = max(mergeTarget.right, b.right)
+            mergeTarget.top = min(mergeTarget.top, b.top)
+            mergeTarget.bottom = max(mergeTarget.bottom, b.bottom)
+            mergeTarget.area = (mergeTarget.right - mergeTarget.left) * (mergeTarget.bottom - mergeTarget.top)
+    
+    for m in merged.keys():
+        merged[m].sort(key=lambda x: x.area, reverse=True)
+        merged[m][:] = [i for i in merged[m] if i.area > MIN_AREA]
+    
+    return merged
+
+
+def overlaps(blob1, blob2):
+    h_over = False
+    v_over = True
+    if (blob1.left > blob2.left and blob2.left < blob2.right
+    or  blob1.right > blob2.left and blob1.right < blob2.right
+    or  blob2.left > blob1.left and blob2.left < blob1.right
+    or  blob2.right > blob1.left and blob2.right < blob1.right):
+        h_over = True
+    
+    if (blob1.top > blob2.top and blob2.top < blob2.bottom
+    or  blob1.bottom > blob2.top and blob1.bottom < blob2.bottom
+    or  blob2.top > blob1.top and blob2.top < blob1.bottom
+    or  blob2.bottom > blob1.top and blob2.bottom < blob1.bottom):
+        v_over = True
+
+    return h_over and v_over
 
 if __name__ == "__main__":
 	catcher()
