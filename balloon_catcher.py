@@ -78,10 +78,9 @@ def catcher():
     horizontal = 0
     vertical = 0.001
     v_prev = 0.001
-    V_THRESHOLD = 0.02 # 2cm
+    V_THRESHOLD = 0.03 # meters
         
     while v_prev - vertical <= V_THRESHOLD:
-        rospy.sleep(0.01)
         print (v_prev, vertical, v_prev - vertical)
         centerOffset, targetBlob = get_blob_offset()
 
@@ -140,10 +139,10 @@ def catcher():
 
         if abs(command.angular.z) > 0.2 and command.linear.x > X_TURN_MAX:
             command.linear.x = X_TURN_MAX
-            print "turning"
+            # print "turning"
 
         pub_command.publish(command)
-        print "x {}, z {}".format(command.linear.x, command.angular.z)
+        # print "x {}, z {}".format(command.linear.x, command.angular.z)
         rospy.sleep(SLEEP)
 
     command = zero()
