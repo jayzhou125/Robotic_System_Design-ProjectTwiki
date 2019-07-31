@@ -73,15 +73,31 @@ def catcher():
 	
 	KINECT_PIXELS_PER_DEGREE = 10
 	
-	# calculate angle from ground to camera-balloon line
-	angle = kinect_angle + ((depth_map.height/2) - targetBlob.y)/KINECT_PIXELS_PER_DEGREE
+	dist = None
+	horizontal = 0
+	vertical = 0
+	v_prev = 0
+	V_THRESHOLD = 0.02 # 2cm
+        
+        while v_prev - vertical >= V_THRESHOLD:
+		rospy.sleep(0.01)
+		print (v_prev, vertical, v_prev - vertical)
+		centerOffset, targetBlob = get_blob_offset()
 
-	# get the distance to the balloon 
-	dist = getDepth(targetBlob.x, targetBlob.y)
-	vertical = getOpposite(angle, dist)
-	horizontal = getAdjacent(angle, dist)
+		if centerOffset == -1 or targetBlob is None:
+			continue
 
-	print "balloon detected {} meters from camera".format(dist)
+		# calculate angle from ground to camera-balloon line
+		angle = kinect_angle + ((depth_map.height/2) - targetBlob.y)/KINECT_PIXELS_PER_DEGREE
+
+		# get the distance to the balloon 
+		dist = getDepth(targetBlob.x, targetBlob.y)
+
+		v_prev = vertical
+		vertical = getOpposite(angle, dist)
+		horizontal = getAdjacent(angle, dist)
+
+	print "balloon falling {} meters from camera".format(dist)
 	print "height {} meters, estimated landing point {} meters".format(vertical, horizontal)
 
 	# move the calculated distance 
