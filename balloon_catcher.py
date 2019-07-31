@@ -79,7 +79,7 @@ def catcher():
 	v_prev = 0
 	V_THRESHOLD = 0.02 # 2cm
         
-        while v_prev - vertical >= V_THRESHOLD:
+    while v_prev - vertical >= V_THRESHOLD:
 		rospy.sleep(0.01)
 		print (v_prev, vertical, v_prev - vertical)
 		centerOffset, targetBlob = get_blob_offset()
@@ -104,44 +104,44 @@ def catcher():
 	# we could use batch command's execute but the trick will be the ball won't be in the center all the time when it falls
 	# so we might need to use the tracking blob with a higher sensitivity.
 
-        location.resetOdom()
-        command = zero()
-        SLEEP = 0.01
+	location.resetOdom()
+	command = zero()
+	SLEEP = 0.01
 	DELTA_X = 0.9 * SLEEP
         Z_MAX = 0.6
         IMAGE_WIDTH = 640
 	X_TURN_MAX = 0.7
 	while(location.currentLocation[0] < horizontal):
-            if command.linear.x < 1:
-                command.linear.x += DELTA_X
-            if command.linear.x > 1:
-                command.linear.x = 1
+		if command.linear.x < 1:
+			command.linear.x += DELTA_X
+		if command.linear.x > 1:
+			command.linear.x = 1
 		
-            command.angular.z = 0
+        command.angular.z = 0
 
-            centerOffset, _ = get_blob_offset()
+        centerOffset, _ = get_blob_offset()
 	    if centerOffset is None:
-                pub_command.publish(command)
-                continue
+			pub_command.publish(command)
+			continue
 	    
-            speed = 50 * centerOffset/float(IMAGE_WIDTH)    # calculate the right amount of speed for the command
+		speed = 50 * centerOffset/float(IMAGE_WIDTH)    # calculate the right amount of speed for the command
 
-            
-            if centerOffset > 20:   # if the offset is bigger than 20
-                # print "{} LEFT".format(abs(centerOffset))
-                command.angular.z = min(Z_MAX, speed) # turn left and follow
-                # print([command.angular.z, centerOffset/rawBlobs.image_width])
-            elif centerOffset < -20:    # if the offset is smaller than -20
-                # print "{} RIGHT".format(abs(centerOffset))
-                command.angular.z = max(-Z_MAX, speed)  # turn right and follow the ball
-                # print([command.angular.z, centerOffset/rawBlobs.image_width])
+		
+		if centerOffset > 20:   # if the offset is bigger than 20
+			# print "{} LEFT".format(abs(centerOffset))
+			command.angular.z = min(Z_MAX, speed) # turn left and follow
+			# print([command.angular.z, centerOffset/rawBlobs.image_width])
+		elif centerOffset < -20:    # if the offset is smaller than -20
+			# print "{} RIGHT".format(abs(centerOffset))
+			command.angular.z = max(-Z_MAX, speed)  # turn right and follow the ball
+			# print([command.angular.z, centerOffset/rawBlobs.image_width])
 
-            if abs(command.angular.z) > 0.2 and command.linear.x > X_TURN_MAX:
-                command.linear.x = X_TURN_MAX
-                print "turning"
-            pub_command.publish(command)
-            print "x {}, z {}".format(command.linear.x, command.angular.z)
-            rospy.sleep(SLEEP)
+		if abs(command.angular.z) > 0.2 and command.linear.x > X_TURN_MAX:
+			command.linear.x = X_TURN_MAX
+			print "turning"
+		pub_command.publish(command)
+		print "x {}, z {}".format(command.linear.x, command.angular.z)
+		rospy.sleep(SLEEP)
 
 	command = zero()
 	pub_command.publish(command)
