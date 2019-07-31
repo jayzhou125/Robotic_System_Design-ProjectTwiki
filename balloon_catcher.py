@@ -5,20 +5,26 @@ import location
 import pid
 from std_msgs.msg import Empty, Float64
 from geometry_msgs.msg import Twist
+from kobuki_msgs.msg import Sound
 from cmvision.msg import Blobs, Blob
 from sensor_msgs.msg import Image
 from batch_controller import execute, cancel
 from rightTriangle import *
 from struct import pack, unpack
 from balloon_tracking_test import scan, get_blob_offset, rawBlobs
+from timeit import default_timer
+from math import isnan
 
 
 pub_command = rospy.Publisher("/kobuki_command", Twist, queue_size=10)  # publish command
 pub_stop = rospy.Publisher("/emergency_stop", Empty, queue_size=10)   # publish stop
+pub_sound = rospy.Publisher("/mobile_base/commands/sound", Sound, queue_size=2)
 kinect_angle = 0.0
 
 depth_map = Image()
 depth_available = False
+ready = Sound()
+ready.value = 0
 
 ##THOUGHTS:
 # we probably need the pid to keep the balloon in the center of the screen
@@ -57,7 +63,7 @@ def zero():
 
     return result
 
-def catcher():
+def catcher(turn_first=False, no_wait=False):
     global pub_stop, pub_command, kinect_angle, depth_available
 
     rospy.init_node("balloon_catcher")
@@ -70,8 +76,13 @@ def catcher():
         rospy.sleep(0.1)
 
     # get the balloon in the center of the screen(ball_tracker)
-    targetBlob = scan(pub_command)
-    
+    if turn_first:
+        targetBlob = scan(pub_command)
+    else:
+        targetBlob = None
+        while targetBlob is None:
+            centerOffset, targetBlob = get_blob_offset()
+
     KINECT_PIXELS_PER_DEGREE = 10
     
     dist = None
@@ -79,11 +90,16 @@ def catcher():
     vertical = 0.001
     v_prev = 0.001
     V_THRESHOLD = 0.03 # meters
+    last = default_timer()
+
+    pub_sound.publish(ready)
         
     while v_prev - vertical <= V_THRESHOLD:
         print (v_prev, vertical, v_prev - vertical)
         centerOffset, targetBlob = get_blob_offset()
-
+        now = default_timer()
+	print("loop time {}".format(now - last))
+        last = now
         if centerOffset is None or targetBlob is None:
             continue
 
@@ -92,11 +108,18 @@ def catcher():
 
         # get the distance to the balloon 
         dist = getDepth(targetBlob.x, targetBlob.y)
-
+        
         v_prev = vertical
-        vertical = getOpposite(angle, dist)
-        horizontal = getAdjacent(angle, dist)
+        if isnan(dist):
+            vertical = 0
+            horizontal = 1.1
+        else:
+            vertical = getOpposite(angle, dist)
+            horizontal = getAdjacent(angle, dist)
+        if no_wait:
+            break
 
+    pub_sound.publish(ready)
     print (v_prev, vertical, v_prev - vertical)
     print "balloon falling {} meters from camera".format(dist)
     print "height {} meters, estimated landing point {} meters".format(vertical, horizontal)
@@ -149,4 +172,12 @@ def catcher():
     pub_command.publish(command)
     
 if __name__ == "__main__":
-    catcher()
+    from argparse import ArgumentParser
+    parser = ArgumentParser("Balloon catcher program using Kinect sensor")
+    parser.add_argument('-t', '--turn-first', dest='turn_first', action='store_const', const=True, default=False, help="add this flag to do a stationary turn before catching the balloon")
+    parser.add_argument('-n', '--no-wait', dest="no_wait", action='store_const', const=True, default=False, help='add this flag to approach the balloon without waiting for it to drop')
+    args = parser.parse_args()
+
+    no_wait = args.no_wait
+    turn_first = args.turn_first
+    catcher(turn_first, no_wait)

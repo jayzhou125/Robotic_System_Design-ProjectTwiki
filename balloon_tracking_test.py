@@ -59,7 +59,7 @@ def track_blobs(mode):
         if centerOffset is None:
             continue
 
-        speed = 16 * centerOffset/float(rawBlobs.image_width)    # calculate the right amount of speed for the command
+        speed = 30 * centerOffset/float(rawBlobs.image_width)    # calculate the right amount of speed for the command
 
         # print "Tracking Blob Object Attr: ", trackingBlob.name, "<<" # added AS
 
